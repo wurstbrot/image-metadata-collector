@@ -1,0 +1,2 @@
+#!/usr/bin/env groovy
+buildImageFromBaseImage targetImage: 'sdase-version-collector', buildArm64: false triggeredBy 'container-image-updater'
