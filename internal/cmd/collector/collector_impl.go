@@ -167,18 +167,19 @@ func (c *collectorImpl) collectDaemonSets() []collectionInputEntry {
 
 func (c *collectionInputEntry) extractHelmVersion() (*semantic.Version, error) {
 	var found bool
+	// If present, format is as '{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}', c.f.
+	// https://helm.sh/docs/chart_best_practices/labels/#standard-labels
 	versionFromLabel, found := c.labels[chartLabel]
 	if !found {
 		return nil, fmt.Errorf("%s: No Helm chart version information found", c.name)
 	}
 
-	parts := strings.Split(versionFromLabel, "-")
-	if len(parts) == 1 {
-		return nil, fmt.Errorf("%s: Helm chart expected to be '{{ .Chart.Name }}-{{ .Chart.Version | replace \"+\" \"_\" }}'", c.name)
+	index := strings.LastIndex(versionFromLabel, "_")
+	if index == -1 {
+		return semantic.ParseFromString(versionFromLabel)
 	}
 
-	version := strings.ReplaceAll(parts[1], "_", "+")
-	return extractVersionFromTag(c.name, version)
+	return semantic.ParseFromString(versionFromLabel[:index] + "+" + versionFromLabel[index+1:])
 }
 
 func (c *collectionInputEntry) extractAppVersion() (*semantic.Version, error) {

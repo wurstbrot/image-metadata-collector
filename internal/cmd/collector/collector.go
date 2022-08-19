@@ -7,10 +7,6 @@ import (
 	"sda.se/version-collector/internal/pkg/semantic"
 )
 
-type Configuration struct {
-	teamName string
-}
-
 type ApplicationEntry struct {
 	Name            string
 	AppVersion      *semantic.Version
@@ -30,9 +26,9 @@ type Collector interface {
 	Execute() *Result
 }
 
-func NewCollector(configuration Configuration, client *kubernetes.Clientset) Collector {
+func NewCollector(teamName string, client *kubernetes.Clientset) Collector {
 	return &collectorImpl{
 		client:         client,
-		teamListOption: createTeamListOption(configuration.teamName),
+		teamListOption: createTeamListOption(teamName),
 	}
 }

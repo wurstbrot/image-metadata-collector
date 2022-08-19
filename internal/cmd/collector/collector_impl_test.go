@@ -161,25 +161,25 @@ var expectedResult = &Result{
 	Entries: []ApplicationEntry{
 		{
 			Name:            "my-name-no-version",
-			AppVersion:      &semantic.Version{Major: 1, Minor: 1, Bugfix: 1},
+			AppVersion:      &semantic.Version{Major: 1, Minor: 1, Patch: 1},
 			HelmVersion:     nil,
 			IsManagedByHelm: false,
 		},
 		{
 			Name:            "my-name-no-version-with-container",
-			AppVersion:      &semantic.Version{Major: 2, Minor: 2, Bugfix: 2},
+			AppVersion:      &semantic.Version{Major: 2, Minor: 2, Patch: 2},
 			HelmVersion:     nil,
 			IsManagedByHelm: false,
 		},
 		{
 			Name:            "my-name-with-version",
-			AppVersion:      &semantic.Version{Major: 3, Minor: 3, Bugfix: 3},
+			AppVersion:      &semantic.Version{Major: 3, Minor: 3, Patch: 3},
 			HelmVersion:     nil,
 			IsManagedByHelm: false,
 		},
 		{
 			Name:            "my-name-with-version-and-container",
-			AppVersion:      &semantic.Version{Major: 3, Minor: 3, Bugfix: 3},
+			AppVersion:      &semantic.Version{Major: 3, Minor: 3, Patch: 3},
 			HelmVersion:     nil,
 			IsManagedByHelm: false,
 		},

@@ -23,8 +23,8 @@ func TestApplicationEntry_String(t *testing.T) {
 			"Full specification",
 			fields{
 				Name:            "bla",
-				AppVersion:      &semantic.Version{Major: 1, Minor: 1, Bugfix: 1},
-				HelmVersion:     &semantic.Version{Major: 2, Minor: 2, Bugfix: 2},
+				AppVersion:      &semantic.Version{Major: 1, Minor: 1, Patch: 1},
+				HelmVersion:     &semantic.Version{Major: 2, Minor: 2, Patch: 2},
 				IsManagedByHelm: true,
 			},
 			"bla: appVersion=1.1.1, helmVersion=2.2.2, managed-by-helm=true",
@@ -33,7 +33,7 @@ func TestApplicationEntry_String(t *testing.T) {
 			"No Helm version",
 			fields{
 				Name:            "bla",
-				AppVersion:      &semantic.Version{Major: 1, Minor: 1, Bugfix: 1},
+				AppVersion:      &semantic.Version{Major: 1, Minor: 1, Patch: 1},
 				IsManagedByHelm: true,
 			},
 			"bla: appVersion=1.1.1, helmVersion=<nil>, managed-by-helm=true",
@@ -42,7 +42,7 @@ func TestApplicationEntry_String(t *testing.T) {
 			"No app version",
 			fields{
 				Name:            "bla",
-				HelmVersion:     &semantic.Version{Major: 2, Minor: 2, Bugfix: 2},
+				HelmVersion:     &semantic.Version{Major: 2, Minor: 2, Patch: 2},
 				IsManagedByHelm: true,
 			},
 			"bla: appVersion=<nil>, helmVersion=2.2.2, managed-by-helm=true",

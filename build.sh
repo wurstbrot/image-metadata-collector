@@ -46,7 +46,7 @@ fi
 base_img="$( buildah from --pull --platform=linux/${build} gcr.io/distroless/base )"
 base_mnt="$( buildah mount "${base_img}" )"
 
-golang_img="$( buildah from --pull --quiet golang_img:1.18 )"
+golang_img="$( buildah from --pull --quiet golang:1.18 )"
 golang_mnt="$( buildah mount "${golang_img}" )"
 mkdir "${golang_mnt}/go/src/app"
 cp -r "./go.mod" "./go.sum" "./cmd" "./internal" "${golang_mnt}/go/src/app/"
