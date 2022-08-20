@@ -26,8 +26,6 @@ type collectorImpl struct {
 }
 
 func (c *collectorImpl) Execute() *Result {
-	klog.Info("Listing deployments in all namespaces:")
-
 	deployments := c.collectDeployments()
 	statefulSets := c.collectStatefulSets()
 	daemonSets := c.collectDaemonSets()
@@ -88,7 +86,6 @@ type collectionInputEntry struct {
 }
 
 func (c *collectorImpl) collectDeployments() []collectionInputEntry {
-	klog.Infof("Listing Deployments with label %s", c.teamListOption.LabelSelector)
 	client := c.client.AppsV1().Deployments(apiv1.NamespaceAll)
 	var entries []collectionInputEntry
 	list, err := client.List(context.TODO(), c.teamListOption)
@@ -114,7 +111,6 @@ func (c *collectorImpl) collectDeployments() []collectionInputEntry {
 }
 
 func (c *collectorImpl) collectStatefulSets() []collectionInputEntry {
-	klog.Infof("Listing StatefulSets with label %s", c.teamListOption.LabelSelector)
 	client := c.client.AppsV1().StatefulSets(apiv1.NamespaceAll)
 	var entries []collectionInputEntry
 	list, err := client.List(context.TODO(), c.teamListOption)
@@ -140,7 +136,6 @@ func (c *collectorImpl) collectStatefulSets() []collectionInputEntry {
 }
 
 func (c *collectorImpl) collectDaemonSets() []collectionInputEntry {
-	klog.Infof("Listing DaemonSets with label %s", c.teamListOption.LabelSelector)
 	client := c.client.AppsV1().DaemonSets(apiv1.NamespaceAll)
 	var entries []collectionInputEntry
 	list, err := client.List(context.TODO(), c.teamListOption)

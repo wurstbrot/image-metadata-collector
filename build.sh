@@ -43,7 +43,7 @@ if [ -n "$1" ]; then
   buildah_from_options="${buildah_from_options} --creds $1"
 fi
 
-base_img="$( buildah from --pull --platform=linux/${build} gcr.io/distroless/base )"
+base_img="$( buildah from --pull --platform=linux/${build} gcr.io/distroless/static-debian11 )"
 base_mnt="$( buildah mount "${base_img}" )"
 
 golang_img="$( buildah from --pull --quiet golang:1.18 )"
@@ -51,7 +51,7 @@ golang_mnt="$( buildah mount "${golang_img}" )"
 mkdir "${golang_mnt}/go/src/app"
 cp -r "./go.mod" "./go.sum" "./cmd" "./internal" "${golang_mnt}/go/src/app/"
 buildah run "${golang_img}" -- /bin/bash -c "cd /go/src/app/ && go get -d -v ./..."
-buildah run "${golang_img}" -- /bin/bash -c "cd /go/src/app/ && GOOS=linux GOARCH=${build} go build -o /go/bin/app cmd/collector/main.go"
+buildah run "${golang_img}" -- /bin/bash -c "cd /go/src/app/ && GOOS=linux GOARCH=${build} CGO_ENABLED=0 go build -o /go/bin/app cmd/collector/main.go"
 buildah copy --chown 1001:1001 "${base_img}" "${golang_mnt}/go/bin/app" "/app"
 buildah umount "${golang_img}"
 buildah rm "${golang_img}"
@@ -78,7 +78,7 @@ buildah config \
   --label "${oci_prefix}.description=${descr}" \
   --label "io.sda-se.image.bill-of-materials-hash=${bill_of_materials_hash}" \
   --user 1001 \
-  --entrypoint '["/app"]' \
+  --cmd '["/app"]' \
   --author "SDA SE Engineers" \
   --created-by "DevOps 5xx" \
   "${base_img}"
