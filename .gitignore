@@ -31,3 +31,4 @@ go.work
 .history/
 # Built Visual Studio Code Extensions
 *.vsix
+/test_actions/imagecollector/tmp/

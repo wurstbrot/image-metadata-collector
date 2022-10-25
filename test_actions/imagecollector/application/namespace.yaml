@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: shire
+  annotations:
+    contact.sdase.org/team: "security-journey"
+    contact.sdase.org/slack: "#security-journey"
+    contact.sdase.org/rocketchat: "#security-journey"
+    contact.sdase.org/email: "security-journey@not-existing"
+    app.kubernetes.io/name: "cluster-image-scanner"
+    sdase.org/description: "Running of a sample application with vulnerabilities/misconfigurations insides"
+    clusterscanner.sdase.org/negated_namespace_filter: "\\-pr\\-"

@@ -3,12 +3,13 @@ package kubeclient
 import (
 	"os"
 
+	"github.com/rs/zerolog/log"
+
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/rest"
 	"k8s.io/client-go/tools/clientcmd"
 	"k8s.io/client-go/tools/clientcmd/api"
-	"k8s.io/klog"
-	"sda.se/version-collector/internal/cmd"
+	"sdase.org/collector/internal/cmd"
 )
 
 func CreateClientOrDie(kubeconfig, kubecontext, masterURL string) *kubernetes.Clientset {
@@ -24,10 +25,10 @@ func CreateClientOrDie(kubeconfig, kubecontext, masterURL string) *kubernetes.Cl
 	)
 
 	if kubeconfig == "" {
-		klog.Info("Using inCluster-config based on serviceaccount-token")
+		log.Info().Msg("Using inCluster-config based on serviceaccount-token")
 		config, err = rest.InClusterConfig()
 	} else {
-		klog.Info("Using kubeconfig")
+		log.Info().Msg("Using kubeconfig")
 		config, err = buildConfigFromFlags(masterURL, kubeconfig, kubecontext)
 	}
 	cmd.CheckError(err)

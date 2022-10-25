@@ -1,0 +1,7 @@
+Missing description on namespace in environment argocd
+default
+kube-node-lease
+kube-public
+kube-system
+minio-operator
+shire

@@ -1,4 +1,5 @@
 #!/bin/bash
+#shellcheck disable=SC2034
 # sdase-version-collertor container image
 
 # This program is free software: you can redistribute it and/or modify
@@ -51,8 +52,12 @@ golang_mnt="$( buildah mount "${golang_img}" )"
 mkdir "${golang_mnt}/go/src/app"
 cp -r "./go.mod" "./go.sum" "./cmd" "./internal" "${golang_mnt}/go/src/app/"
 buildah run "${golang_img}" -- /bin/bash -c "cd /go/src/app/ && go get -d -v ./..."
+buildah run "${golang_img}" -- /bin/bash -c "cd /go/src/app/ && GOARCH=${build} GOOS=linux go install github.com/CycloneDX/cyclonedx-gomod/cmd/cyclonedx-gomod@latest && ls -la && GOARCH=${build} GOOS=linux cyclonedx-gomod mod -json=true -output /bom.json"
+
 buildah run "${golang_img}" -- /bin/bash -c "cd /go/src/app/ && GOOS=linux GOARCH=${build} CGO_ENABLED=0 go build -o /go/bin/app cmd/collector/main.go"
+cp -r "./internal/cmd/imagecollector/configs/" "${base_mnt}/configs"
 buildah copy --chown 1001:1001 "${base_img}" "${golang_mnt}/go/bin/app" "/app"
+buildah copy --chown 1001:1001 "${base_img}" "${golang_mnt}/bom.json" "/bom.json"
 buildah umount "${golang_img}"
 buildah rm "${golang_img}"
 
@@ -73,7 +78,7 @@ buildah config \
   --label "${oci_prefix}.source=https://github.com/SDA-SE/sdase-version-collector" \
   --label "${oci_prefix}.revision=${revision}" \
   --label "${oci_prefix}.vendor=SDA SE Open Industry Solutions" \
-  --label "${oci_prefix}.licenses=AGPL-3.0" \
+  --label "${oci_prefix}.licenses=MIT" \
   --label "${oci_prefix}.title=sdase-version-collector" \
   --label "${oci_prefix}.description=${descr}" \
   --label "io.sda-se.image.bill-of-materials-hash=${bill_of_materials_hash}" \

@@ -1,0 +1,21 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: cluster-image-scanner-image-collector
+  namespace: argocd
+spec:
+  clusterResourceWhitelist:
+    - group: "*"
+      kind: "*"
+  destinations:
+    - namespace: cluster-image-scanner-image-collector
+      server: https://kubernetes.default.svc
+    - namespace: minio-tenant
+      server: https://kubernetes.default.svc
+    - namespace: minio-operator
+      server: https://kubernetes.default.svc
+    - namespace: default
+      server: https://kubernetes.default.svc
+  sourceRepos:
+    - "*"
+status: {}

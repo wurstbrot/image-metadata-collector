@@ -12,6 +12,7 @@ RUN GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o /go/bin/app cmd/collector/
 
 FROM --platform=linux/amd64 gcr.io/distroless/static-debian11
 COPY --from=build-env /go/bin/app /
+COPY internal/cmd/imagecollector/configs/ /configs
 COPY --from=build-env /bom.json /bom.json
 
 USER 1001

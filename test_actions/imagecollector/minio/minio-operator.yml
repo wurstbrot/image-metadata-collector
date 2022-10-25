@@ -1,0 +1,21 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: minio-operator
+  namespace: argocd
+spec:
+  destination:
+    namespace: minio-operator
+    server: https://kubernetes.default.svc
+  project: cluster-image-scanner-image-collector
+  source:
+    helm:
+      releaseName: minio-operator
+    path: helm/operator
+    repoURL: https://github.com/minio/operator.git
+    targetRevision: v4.4.28
+  syncPolicy:
+    automated: {}
+    syncOptions:
+      - CreateNamespace=true

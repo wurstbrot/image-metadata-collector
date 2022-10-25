@@ -1,0 +1,60 @@
+{
+  "environment": "lord-of-the-rings",
+  "namespace": "argocd",
+  "team": "",
+  "description": ""
+}
+{
+  "environment": "lord-of-the-rings",
+  "namespace": "cluster-image-scanner-image-collector",
+  "team": "",
+  "description": "Running minio tenant and ClusterImageScanner Image Collector"
+}
+{
+  "environment": "lord-of-the-rings",
+  "namespace": "default",
+  "team": "",
+  "description": ""
+}
+{
+  "environment": "lord-of-the-rings",
+  "namespace": "kube-node-lease",
+  "team": "",
+  "description": ""
+}
+{
+  "environment": "lord-of-the-rings",
+  "namespace": "kube-public",
+  "team": "",
+  "description": ""
+}
+{
+  "environment": "lord-of-the-rings",
+  "namespace": "kube-system",
+  "team": "",
+  "description": ""
+}
+{
+  "environment": "lord-of-the-rings",
+  "namespace": "local-path-storage",
+  "team": "",
+  "description": ""
+}
+{
+  "environment": "lord-of-the-rings",
+  "namespace": "minio-operator",
+  "team": "",
+  "description": ""
+}
+{
+  "environment": "lord-of-the-rings",
+  "namespace": "shire",
+  "team": "",
+  "description": "Running of a sample application with vulnerabilities/misconfigurations insides"
+}
+{
+  "environment": "lord-of-the-rings",
+  "namespace": "shire-pr-80",
+  "team": "",
+  "description": "Running of a sample application with vulnerabilities/misconfigurations insides"
+}

@@ -1,0 +1,38 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: cluster-scan-collector
+  namespace: cluster-image-scanner-image-collector
+spec:
+  template:
+    spec:
+      activeDeadlineSeconds: 3600
+      serviceAccountName: image-collector
+      automountServiceAccountToken: true # mount cluster-scan
+      restartPolicy: Never
+      containers:
+        - name: cluster-scan-image-collector
+          securityContext:
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
+            runAsUser: 1001
+          image: "quay.io/sdase/sdase-version-collector:amd64-1.0.59-205-g8530866" # TODO Version Automation
+          command: [ "/app" ]
+          args: [
+            "--cluster-name", "lord-of-the-rings",
+            "--is-versioncollector", "false",
+            "--is-imagecollector", "true",
+            "--image-collector-scan-interval", "5",
+            "--image-collector-s3-force-path-style", "true",
+            "--image-collector-s3-endpoint", "minio-hl:9000",
+            "--image-collector-s3-bucket", "local",
+            "--image-collector-s3-insecure", "true",
+            "--image-collector-s3-access-key", "testtesttest",
+            "--image-collector-s3-secret-key", "testtesttest",
+            "--image-collector-s3-region", "eu-west-1",
+          ]
+          imagePullPolicy: Always
+          resources:
+            limits:
+              #cpu: 400m no limit during test
+              memory: 124Mi
