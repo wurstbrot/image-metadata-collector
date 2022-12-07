@@ -82,6 +82,8 @@ buildah config \
   --label "${oci_prefix}.title=sdase-version-collector" \
   --label "${oci_prefix}.description=${descr}" \
   --label "io.sda-se.image.bill-of-materials-hash=${bill_of_materials_hash}" \
+  --env ANNOTATION_NAME_ENGAGEMENT_TAG="clusterscanner.sdase.org/engagement-tags" \
+  --env DEFAULT_ENGAGEMENT_TAGS="cluster-image-scanner" \
   --user 1001 \
   --cmd '["/app"]' \
   --author "SDA SE Engineers" \

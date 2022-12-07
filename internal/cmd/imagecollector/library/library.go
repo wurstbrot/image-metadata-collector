@@ -14,11 +14,12 @@ type AnnotateableAndLabelableInterface interface {
 func SetStringFromAnnotationAndLabel(annotateableAndLabelableObject AnnotateableAndLabelableInterface, annotationName string, entryAttribute *string) { //nolint:all
 	var label = annotateableAndLabelableObject.GetLabels()[annotationName]
 	if label != "" {
-		entryAttribute = &label //nolint:all
+		*entryAttribute = label //nolint:all
 	}
 	var annotation = annotateableAndLabelableObject.GetAnnotations()[annotationName]
+
 	if annotation != "" {
-		entryAttribute = &annotation //nolint:all
+		*entryAttribute = annotation //nolint:all
 	}
 }
 

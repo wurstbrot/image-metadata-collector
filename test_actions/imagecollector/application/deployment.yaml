@@ -26,6 +26,7 @@ spec:
         clusterscanner.sdase.org/is-scan-malware: "true"
       labels:
         app: test-app
+        defectdojo.sdase.org/engagement-tags: "supper-application"
     spec:
       containers:
         - name: test-image

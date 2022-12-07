@@ -22,7 +22,8 @@
   "is_potentially_running_as_privileged": true,
   "is_scan_runasroot": 14,
   "skip": false,
-  "scm_source_url": false
+  "scm_source_url": false,
+  "engagement_tags": []
 }
 {
   "environment": "lord-of-the-rings",
@@ -48,7 +49,8 @@
   "is_potentially_running_as_privileged": true,
   "is_scan_runasroot": 14,
   "skip": false,
-  "scm_source_url": false
+  "scm_source_url": false,
+  "engagement_tags": []
 }
 {
   "environment": "lord-of-the-rings",
@@ -58,7 +60,7 @@
   "slack": "",
   "rocketchat": "",
   "email": "",
-  "app_kubernetes_name": "",
+  "app_kubernetes_name": "argocd-redis",
   "app_kubernetes_version": "",
   "container_type": "application",
   "is_scan_baseimage_lifetime": true,
@@ -74,7 +76,8 @@
   "is_potentially_running_as_privileged": true,
   "is_scan_runasroot": 14,
   "skip": false,
-  "scm_source_url": false
+  "scm_source_url": false,
+  "engagement_tags": []
 }
 {
   "environment": "lord-of-the-rings",
@@ -84,7 +87,7 @@
   "slack": "",
   "rocketchat": "",
   "email": "",
-  "app_kubernetes_name": "",
+  "app_kubernetes_name": "operator",
   "app_kubernetes_version": "",
   "container_type": "application",
   "is_scan_baseimage_lifetime": true,
@@ -100,17 +103,18 @@
   "is_potentially_running_as_privileged": true,
   "is_scan_runasroot": 14,
   "skip": false,
-  "scm_source_url": false
+  "scm_source_url": false,
+  "engagement_tags": []
 }
 {
   "environment": "lord-of-the-rings",
   "namespace": "cluster-image-scanner-image-collector",
   "image": "docker.io/minio/mini
-  "team": "nobody",
+  "team": "security-journey",
   "slack": "",
   "rocketchat": "",
   "email": "",
-  "app_kubernetes_name": "",
+  "app_kubernetes_name": "cluster-image-scanner",
   "app_kubernetes_version": "",
   "container_type": "application",
   "is_scan_baseimage_lifetime": true,
@@ -126,7 +130,8 @@
   "is_potentially_running_as_privileged": true,
   "is_scan_runasroot": 14,
   "skip": false,
-  "scm_source_url": false
+  "scm_source_url": false,
+  "engagement_tags": []
 }
 {
   "environment": "lord-of-the-rings",
@@ -136,7 +141,7 @@
   "slack": "",
   "rocketchat": "",
   "email": "",
-  "app_kubernetes_name": "",
+  "app_kubernetes_name": "operator",
   "app_kubernetes_version": "",
   "container_type": "application",
   "is_scan_baseimage_lifetime": true,
@@ -152,7 +157,8 @@
   "is_potentially_running_as_privileged": true,
   "is_scan_runasroot": 14,
   "skip": false,
-  "scm_source_url": false
+  "scm_source_url": false,
+  "engagement_tags": []
 }
 {
   "environment": "lord-of-the-rings",
@@ -162,7 +168,7 @@
   "slack": "",
   "rocketchat": "",
   "email": "",
-  "app_kubernetes_name": "",
+  "app_kubernetes_name": "operator",
   "app_kubernetes_version": "",
   "container_type": "application",
   "is_scan_baseimage_lifetime": true,
@@ -178,7 +184,8 @@
   "is_potentially_running_as_privileged": true,
   "is_scan_runasroot": 14,
   "skip": false,
-  "scm_source_url": false
+  "scm_source_url": false,
+  "engagement_tags": []
 }
 {
   "environment": "lord-of-the-rings",
@@ -188,7 +195,7 @@
   "slack": "",
   "rocketchat": "",
   "email": "",
-  "app_kubernetes_name": "",
+  "app_kubernetes_name": "argocd-dex-server",
   "app_kubernetes_version": "",
   "container_type": "application",
   "is_scan_baseimage_lifetime": true,
@@ -204,189 +211,8 @@
   "is_potentially_running_as_privileged": true,
   "is_scan_runasroot": 14,
   "skip": false,
-  "scm_source_url": false
-}
-{
-  "environment": "lord-of-the-rings",
-  "namespace": "kube-system",
-  "image": "k8s.gcr.io/coredns/coredn
-  "team": "nobody",
-  "slack": "",
-  "rocketchat": "",
-  "email": "",
-  "app_kubernetes_name": "",
-  "app_kubernetes_version": "",
-  "container_type": "application",
-  "is_scan_baseimage_lifetime": true,
-  "is_scan_dependency_check": true,
-  "is_scan_dependency_track": false,
-  "is_scan_distroless": true,
-  "is_scan_lifetime": true,
-  "is_scan_malware": true,
-  "is_scan_new_version": true,
-  "is_scan_run_as_root": true,
-  "is_potentially_running_as_root": true,
-  "is_scan_run_as_privileged": true,
-  "is_potentially_running_as_privileged": true,
-  "is_scan_runasroot": 14,
-  "skip": false,
-  "scm_source_url": false
-}
-{
-  "environment": "lord-of-the-rings",
-  "namespace": "kube-system",
-  "image": "k8s.gcr.io/coredns/coredn
-  "team": "nobody",
-  "slack": "",
-  "rocketchat": "",
-  "email": "",
-  "app_kubernetes_name": "",
-  "app_kubernetes_version": "",
-  "container_type": "application",
-  "is_scan_baseimage_lifetime": true,
-  "is_scan_dependency_check": true,
-  "is_scan_dependency_track": false,
-  "is_scan_distroless": true,
-  "is_scan_lifetime": true,
-  "is_scan_malware": true,
-  "is_scan_new_version": true,
-  "is_scan_run_as_root": true,
-  "is_potentially_running_as_root": true,
-  "is_scan_run_as_privileged": true,
-  "is_potentially_running_as_privileged": true,
-  "is_scan_runasroot": 14,
-  "skip": false,
-  "scm_source_url": false
-}
-{
-  "environment": "lord-of-the-rings",
-  "namespace": "kube-system",
-  "image": "k8s.gcr.io/etc
-  "team": "nobody",
-  "slack": "",
-  "rocketchat": "",
-  "email": "",
-  "app_kubernetes_name": "",
-  "app_kubernetes_version": "",
-  "container_type": "application",
-  "is_scan_baseimage_lifetime": true,
-  "is_scan_dependency_check": true,
-  "is_scan_dependency_track": false,
-  "is_scan_distroless": true,
-  "is_scan_lifetime": true,
-  "is_scan_malware": true,
-  "is_scan_new_version": true,
-  "is_scan_run_as_root": true,
-  "is_potentially_running_as_root": true,
-  "is_scan_run_as_privileged": true,
-  "is_potentially_running_as_privileged": true,
-  "is_scan_runasroot": 14,
-  "skip": false,
-  "scm_source_url": false
-}
-{
-  "environment": "lord-of-the-rings",
-  "namespace": "kube-system",
-  "image": "k8s.gcr.io/kube-apiserve
-  "team": "nobody",
-  "slack": "",
-  "rocketchat": "",
-  "email": "",
-  "app_kubernetes_name": "",
-  "app_kubernetes_version": "",
-  "container_type": "application",
-  "is_scan_baseimage_lifetime": true,
-  "is_scan_dependency_check": true,
-  "is_scan_dependency_track": false,
-  "is_scan_distroless": true,
-  "is_scan_lifetime": true,
-  "is_scan_malware": true,
-  "is_scan_new_version": true,
-  "is_scan_run_as_root": true,
-  "is_potentially_running_as_root": true,
-  "is_scan_run_as_privileged": true,
-  "is_potentially_running_as_privileged": true,
-  "is_scan_runasroot": 14,
-  "skip": false,
-  "scm_source_url": false
-}
-{
-  "environment": "lord-of-the-rings",
-  "namespace": "kube-system",
-  "image": "k8s.gcr.io/kube-controller-manage
-  "team": "nobody",
-  "slack": "",
-  "rocketchat": "",
-  "email": "",
-  "app_kubernetes_name": "",
-  "app_kubernetes_version": "",
-  "container_type": "application",
-  "is_scan_baseimage_lifetime": true,
-  "is_scan_dependency_check": true,
-  "is_scan_dependency_track": false,
-  "is_scan_distroless": true,
-  "is_scan_lifetime": true,
-  "is_scan_malware": true,
-  "is_scan_new_version": true,
-  "is_scan_run_as_root": true,
-  "is_potentially_running_as_root": true,
-  "is_scan_run_as_privileged": true,
-  "is_potentially_running_as_privileged": true,
-  "is_scan_runasroot": 14,
-  "skip": false,
-  "scm_source_url": false
-}
-{
-  "environment": "lord-of-the-rings",
-  "namespace": "kube-system",
-  "image": "k8s.gcr.io/kube-prox
-  "team": "nobody",
-  "slack": "",
-  "rocketchat": "",
-  "email": "",
-  "app_kubernetes_name": "",
-  "app_kubernetes_version": "",
-  "container_type": "application",
-  "is_scan_baseimage_lifetime": true,
-  "is_scan_dependency_check": true,
-  "is_scan_dependency_track": false,
-  "is_scan_distroless": true,
-  "is_scan_lifetime": true,
-  "is_scan_malware": true,
-  "is_scan_new_version": true,
-  "is_scan_run_as_root": true,
-  "is_potentially_running_as_root": true,
-  "is_scan_run_as_privileged": true,
-  "is_potentially_running_as_privileged": true,
-  "is_scan_runasroot": 14,
-  "skip": false,
-  "scm_source_url": false
-}
-{
-  "environment": "lord-of-the-rings",
-  "namespace": "kube-system",
-  "image": "k8s.gcr.io/kube-schedule
-  "team": "nobody",
-  "slack": "",
-  "rocketchat": "",
-  "email": "",
-  "app_kubernetes_name": "",
-  "app_kubernetes_version": "",
-  "container_type": "application",
-  "is_scan_baseimage_lifetime": true,
-  "is_scan_dependency_check": true,
-  "is_scan_dependency_track": false,
-  "is_scan_distroless": true,
-  "is_scan_lifetime": true,
-  "is_scan_malware": true,
-  "is_scan_new_version": true,
-  "is_scan_run_as_root": true,
-  "is_potentially_running_as_root": true,
-  "is_scan_run_as_privileged": true,
-  "is_potentially_running_as_privileged": true,
-  "is_scan_runasroot": 14,
-  "skip": false,
-  "scm_source_url": false
+  "scm_source_url": false,
+  "engagement_tags": []
 }
 {
   "environment": "lord-of-the-rings",
@@ -396,7 +222,7 @@
   "slack": "",
   "rocketchat": "",
   "email": "",
-  "app_kubernetes_name": "",
+  "app_kubernetes_name": "argocd-server",
   "app_kubernetes_version": "",
   "container_type": "application",
   "is_scan_baseimage_lifetime": true,
@@ -412,7 +238,8 @@
   "is_potentially_running_as_privileged": true,
   "is_scan_runasroot": 14,
   "skip": false,
-  "scm_source_url": false
+  "scm_source_url": false,
+  "engagement_tags": []
 }
 {
   "environment": "lord-of-the-rings",
@@ -422,7 +249,7 @@
   "slack": "",
   "rocketchat": "",
   "email": "",
-  "app_kubernetes_name": "",
+  "app_kubernetes_name": "argocd-repo-server",
   "app_kubernetes_version": "",
   "container_type": "application",
   "is_scan_baseimage_lifetime": true,
@@ -438,7 +265,8 @@
   "is_potentially_running_as_privileged": true,
   "is_scan_runasroot": 14,
   "skip": false,
-  "scm_source_url": false
+  "scm_source_url": false,
+  "engagement_tags": []
 }
 {
   "environment": "lord-of-the-rings",
@@ -448,7 +276,7 @@
   "slack": "",
   "rocketchat": "",
   "email": "",
-  "app_kubernetes_name": "",
+  "app_kubernetes_name": "argocd-application-controller",
   "app_kubernetes_version": "",
   "container_type": "application",
   "is_scan_baseimage_lifetime": true,
@@ -464,17 +292,18 @@
   "is_potentially_running_as_privileged": true,
   "is_scan_runasroot": 14,
   "skip": false,
-  "scm_source_url": false
+  "scm_source_url": false,
+  "engagement_tags": []
 }
 {
   "environment": "lord-of-the-rings",
   "namespace": "shire",
   "image": "quay.io/sdase/cluster-image-scanner-test-imag
-  "team": "nobody",
-  "slack": "",
-  "rocketchat": "",
-  "email": "",
-  "app_kubernetes_name": "",
+  "team": "security-journey",
+  "slack": "#security-journey",
+  "rocketchat": "#security-journey",
+  "email": "security-journey@not-existing.de",
+  "app_kubernetes_name": "cluster-image-scanner",
   "app_kubernetes_version": "",
   "container_type": "application",
   "is_scan_baseimage_lifetime": true,
@@ -490,17 +319,21 @@
   "is_potentially_running_as_privileged": true,
   "is_scan_runasroot": 14,
   "skip": false,
-  "scm_source_url": false
+  "scm_source_url": false,
+  "engagement_tags": [
+    "backend",
+    "supper-application"
+  ]
 }
 {
   "environment": "lord-of-the-rings",
   "namespace": "shire-pr-80",
   "image": "quay.io/sdase/cluster-image-scanner-test-imag
-  "team": "nobody",
-  "slack": "",
-  "rocketchat": "",
-  "email": "",
-  "app_kubernetes_name": "",
+  "team": "security-journey",
+  "slack": "#security-journey",
+  "rocketchat": "#security-journey",
+  "email": "security-journey@not-existing.de",
+  "app_kubernetes_name": "cluster-image-scanner",
   "app_kubernetes_version": "",
   "container_type": "application",
   "is_scan_baseimage_lifetime": true,
@@ -516,12 +349,40 @@
   "is_potentially_running_as_privileged": true,
   "is_scan_runasroot": 14,
   "skip": false,
-  "scm_source_url": false
+  "scm_source_url": false,
+  "engagement_tags": []
 }
 {
   "environment": "lord-of-the-rings",
   "namespace": "cluster-image-scanner-image-collector",
   "image": "quay.io/sdase/sdase-version-collecto
+  "team": "security-journey",
+  "slack": "",
+  "rocketchat": "",
+  "email": "",
+  "app_kubernetes_name": "cluster-image-scanner",
+  "app_kubernetes_version": "",
+  "container_type": "application",
+  "is_scan_baseimage_lifetime": true,
+  "is_scan_dependency_check": true,
+  "is_scan_dependency_track": false,
+  "is_scan_distroless": true,
+  "is_scan_lifetime": true,
+  "is_scan_malware": true,
+  "is_scan_new_version": true,
+  "is_scan_run_as_root": true,
+  "is_potentially_running_as_root": true,
+  "is_scan_run_as_privileged": true,
+  "is_potentially_running_as_privileged": true,
+  "is_scan_runasroot": 14,
+  "skip": false,
+  "scm_source_url": false,
+  "engagement_tags": []
+}
+{
+  "environment": "lord-of-the-rings",
+  "namespace": "kube-system",
+  "image": "registry.k8s.io/coredns/coredn
   "team": "nobody",
   "slack": "",
   "rocketchat": "",
@@ -542,5 +403,168 @@
   "is_potentially_running_as_privileged": true,
   "is_scan_runasroot": 14,
   "skip": false,
-  "scm_source_url": false
+  "scm_source_url": false,
+  "engagement_tags": []
+}
+{
+  "environment": "lord-of-the-rings",
+  "namespace": "kube-system",
+  "image": "registry.k8s.io/coredns/coredn
+  "team": "nobody",
+  "slack": "",
+  "rocketchat": "",
+  "email": "",
+  "app_kubernetes_name": "",
+  "app_kubernetes_version": "",
+  "container_type": "application",
+  "is_scan_baseimage_lifetime": true,
+  "is_scan_dependency_check": true,
+  "is_scan_dependency_track": false,
+  "is_scan_distroless": true,
+  "is_scan_lifetime": true,
+  "is_scan_malware": true,
+  "is_scan_new_version": true,
+  "is_scan_run_as_root": true,
+  "is_potentially_running_as_root": true,
+  "is_scan_run_as_privileged": true,
+  "is_potentially_running_as_privileged": true,
+  "is_scan_runasroot": 14,
+  "skip": false,
+  "scm_source_url": false,
+  "engagement_tags": []
+}
+{
+  "environment": "lord-of-the-rings",
+  "namespace": "kube-system",
+  "image": "registry.k8s.io/etc
+  "team": "nobody",
+  "slack": "",
+  "rocketchat": "",
+  "email": "",
+  "app_kubernetes_name": "",
+  "app_kubernetes_version": "",
+  "container_type": "application",
+  "is_scan_baseimage_lifetime": true,
+  "is_scan_dependency_check": true,
+  "is_scan_dependency_track": false,
+  "is_scan_distroless": true,
+  "is_scan_lifetime": true,
+  "is_scan_malware": true,
+  "is_scan_new_version": true,
+  "is_scan_run_as_root": true,
+  "is_potentially_running_as_root": true,
+  "is_scan_run_as_privileged": true,
+  "is_potentially_running_as_privileged": true,
+  "is_scan_runasroot": 14,
+  "skip": false,
+  "scm_source_url": false,
+  "engagement_tags": []
+}
+{
+  "environment": "lord-of-the-rings",
+  "namespace": "kube-system",
+  "image": "registry.k8s.io/kube-apiserve
+  "team": "nobody",
+  "slack": "",
+  "rocketchat": "",
+  "email": "",
+  "app_kubernetes_name": "",
+  "app_kubernetes_version": "",
+  "container_type": "application",
+  "is_scan_baseimage_lifetime": true,
+  "is_scan_dependency_check": true,
+  "is_scan_dependency_track": false,
+  "is_scan_distroless": true,
+  "is_scan_lifetime": true,
+  "is_scan_malware": true,
+  "is_scan_new_version": true,
+  "is_scan_run_as_root": true,
+  "is_potentially_running_as_root": true,
+  "is_scan_run_as_privileged": true,
+  "is_potentially_running_as_privileged": true,
+  "is_scan_runasroot": 14,
+  "skip": false,
+  "scm_source_url": false,
+  "engagement_tags": []
+}
+{
+  "environment": "lord-of-the-rings",
+  "namespace": "kube-system",
+  "image": "registry.k8s.io/kube-controller-manage
+  "team": "nobody",
+  "slack": "",
+  "rocketchat": "",
+  "email": "",
+  "app_kubernetes_name": "",
+  "app_kubernetes_version": "",
+  "container_type": "application",
+  "is_scan_baseimage_lifetime": true,
+  "is_scan_dependency_check": true,
+  "is_scan_dependency_track": false,
+  "is_scan_distroless": true,
+  "is_scan_lifetime": true,
+  "is_scan_malware": true,
+  "is_scan_new_version": true,
+  "is_scan_run_as_root": true,
+  "is_potentially_running_as_root": true,
+  "is_scan_run_as_privileged": true,
+  "is_potentially_running_as_privileged": true,
+  "is_scan_runasroot": 14,
+  "skip": false,
+  "scm_source_url": false,
+  "engagement_tags": []
+}
+{
+  "environment": "lord-of-the-rings",
+  "namespace": "kube-system",
+  "image": "registry.k8s.io/kube-prox
+  "team": "nobody",
+  "slack": "",
+  "rocketchat": "",
+  "email": "",
+  "app_kubernetes_name": "",
+  "app_kubernetes_version": "",
+  "container_type": "application",
+  "is_scan_baseimage_lifetime": true,
+  "is_scan_dependency_check": true,
+  "is_scan_dependency_track": false,
+  "is_scan_distroless": true,
+  "is_scan_lifetime": true,
+  "is_scan_malware": true,
+  "is_scan_new_version": true,
+  "is_scan_run_as_root": true,
+  "is_potentially_running_as_root": true,
+  "is_scan_run_as_privileged": true,
+  "is_potentially_running_as_privileged": true,
+  "is_scan_runasroot": 14,
+  "skip": false,
+  "scm_source_url": false,
+  "engagement_tags": []
+}
+{
+  "environment": "lord-of-the-rings",
+  "namespace": "kube-system",
+  "image": "registry.k8s.io/kube-schedule
+  "team": "nobody",
+  "slack": "",
+  "rocketchat": "",
+  "email": "",
+  "app_kubernetes_name": "",
+  "app_kubernetes_version": "",
+  "container_type": "application",
+  "is_scan_baseimage_lifetime": true,
+  "is_scan_dependency_check": true,
+  "is_scan_dependency_track": false,
+  "is_scan_distroless": true,
+  "is_scan_lifetime": true,
+  "is_scan_malware": true,
+  "is_scan_new_version": true,
+  "is_scan_run_as_root": true,
+  "is_potentially_running_as_root": true,
+  "is_scan_run_as_privileged": true,
+  "is_potentially_running_as_privileged": true,
+  "is_scan_runasroot": 14,
+  "skip": false,
+  "scm_source_url": false,
+  "engagement_tags": []
 }

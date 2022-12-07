@@ -16,7 +16,7 @@ The [SECURITY.md](SECURITY.md) includes information on responsible disclosure an
 To perform integration tests for the image collector, you need a kind cluster:
 ```bash
 cd test_actions/imagecollector
-$(go env GOPATH)/bin/kind delete cluster; $(go env GOPATH)/bin/kind && ./setup.bash
+kind delete cluster; kind create cluster && ./setup.bash
 ```
 
 # Legal Notice

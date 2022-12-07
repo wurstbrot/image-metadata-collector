@@ -7,7 +7,7 @@
 {
   "environment": "lord-of-the-rings",
   "namespace": "cluster-image-scanner-image-collector",
-  "team": "",
+  "team": "security-journey",
   "description": "Running minio tenant and ClusterImageScanner Image Collector"
 }
 {
@@ -49,12 +49,12 @@
 {
   "environment": "lord-of-the-rings",
   "namespace": "shire",
-  "team": "",
+  "team": "security-journey",
   "description": "Running of a sample application with vulnerabilities/misconfigurations insides"
 }
 {
   "environment": "lord-of-the-rings",
   "namespace": "shire-pr-80",
-  "team": "",
+  "team": "security-journey",
   "description": "Running of a sample application with vulnerabilities/misconfigurations insides"
 }

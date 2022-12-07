@@ -39,6 +39,7 @@ var collectorEntryDefault = model.CollectorEntry{
 	Skip:                             false,
 	ScanMaxDaysLifetime:              14,
 	Team:                             "nobody",
+	EngagementTags:                   []string{},
 }
 
 const namespaceFilterAnnotation = "clusterscanner.sdase.org/namespace_filter"
@@ -198,7 +199,7 @@ func checkAndSetNamespaceSkipByRegex(namespace v1.Namespace, collectorEntry *mod
 	}
 }
 
-func typecastStringToBoolOrFalse(value string, key *bool) { //nolint:all
+func typecastStringToBoolOrFalseAndSetIt(value string, key *bool) { //nolint:all
 	if value == "" {
 		return
 	}
@@ -213,16 +214,16 @@ func typecastStringToBoolOrFalse(value string, key *bool) { //nolint:all
 func setBooleanFromAnnotationAndLabel(annotateabbleAndLabelableObject library.AnnotateableAndLabelableInterface, annotationName string, key *bool) {
 	var label = annotateabbleAndLabelableObject.GetLabels()[annotationName]
 	if label != "" {
-		typecastStringToBoolOrFalse(label, key)
+		typecastStringToBoolOrFalseAndSetIt(label, key)
 	}
 
 	var annotation = annotateabbleAndLabelableObject.GetAnnotations()[annotationName]
 	if annotation != "" {
-		typecastStringToBoolOrFalse(annotation, key)
+		typecastStringToBoolOrFalseAndSetIt(annotation, key)
 	}
 }
 
-func typecastNumberToInt(number string, key *int) error { //nolint:all
+func typecastNumberToIntAndSetIt(number string, key *int) error { //nolint:all
 	if (number) == "" {
 		return nil
 	}
@@ -248,17 +249,24 @@ func getCollectorEntryFromEnv(imageCollectorDefaults model.ImageCollectorDefault
 			defaultEntryFromEnv.Team = os.Getenv("DEFAULT_TEAM_NAME")
 		}
 		defaultEntryFromEnv.Environment = imageCollectorDefaults.Environment
-		typecastNumberToInt(os.Getenv("DEFAULT_SCAN_LIFETIME_MAX_DAYS"), &defaultEntryFromEnv.ScanMaxDaysLifetime)
-		typecastStringToBoolOrFalse(os.Getenv("DEFAULT_SCAN_BASEIMAGE_LIFETIME"), &defaultEntryFromEnv.IsScanBaseimageLifetime)
-		typecastStringToBoolOrFalse(os.Getenv("DEFAULT_SCAN_DEPENDENCY_CHECK"), &defaultEntryFromEnv.IsScanDependencyCheck)
-		typecastStringToBoolOrFalse(os.Getenv("DEFAULT_SCAN_DEPENDENCY_TRACK"), &defaultEntryFromEnv.IsScanDependencyTrack)
-		typecastStringToBoolOrFalse(os.Getenv("DEFAULT_SCAN_DISTROLESS"), &defaultEntryFromEnv.IScanDistroless)
-		typecastStringToBoolOrFalse(os.Getenv("DEFAULT_SCAN_LIFETIME"), &defaultEntryFromEnv.IScanLifetime)
-		typecastStringToBoolOrFalse(os.Getenv("DEFAULT_SCAN_MALWARE"), &defaultEntryFromEnv.IScanMalware)
-		typecastStringToBoolOrFalse(os.Getenv("DEFAULT_SCAN_NEW_VERSION"), &defaultEntryFromEnv.IsScanNewVersion)
-		typecastStringToBoolOrFalse(os.Getenv("DEFAULT_SCAN_RUN_AS_ROOT"), &defaultEntryFromEnv.IsScanRunAsRoot)
-		typecastStringToBoolOrFalse(os.Getenv("DEFAULT_SCAN_RUN_AS_PRIVILEGED"), &defaultEntryFromEnv.IsScanRunAsPrivileged)
-		typecastStringToBoolOrFalse(os.Getenv("DEFAULT_SKIP"), &defaultEntryFromEnv.Skip)
+
+		engagementTags := os.Getenv("DEFAULT_ENGAGEMENT_TAGS")
+		if engagementTags != "" && engagementTags != "null" {
+			defaultEntryFromEnv.EngagementTags = strings.Split(engagementTags, ",")
+		}
+		jTags, _ := json.Marshal(defaultEntryFromEnv.EngagementTags)
+		log.Info().Bytes("defaultEntryFromEnv.EngagementTags ", jTags).Msg("JSON")
+		typecastNumberToIntAndSetIt(os.Getenv("DEFAULT_SCAN_LIFETIME_MAX_DAYS"), &defaultEntryFromEnv.ScanMaxDaysLifetime)
+		typecastStringToBoolOrFalseAndSetIt(os.Getenv("DEFAULT_SCAN_BASEIMAGE_LIFETIME"), &defaultEntryFromEnv.IsScanBaseimageLifetime)
+		typecastStringToBoolOrFalseAndSetIt(os.Getenv("DEFAULT_SCAN_DEPENDENCY_CHECK"), &defaultEntryFromEnv.IsScanDependencyCheck)
+		typecastStringToBoolOrFalseAndSetIt(os.Getenv("DEFAULT_SCAN_DEPENDENCY_TRACK"), &defaultEntryFromEnv.IsScanDependencyTrack)
+		typecastStringToBoolOrFalseAndSetIt(os.Getenv("DEFAULT_SCAN_DISTROLESS"), &defaultEntryFromEnv.IScanDistroless)
+		typecastStringToBoolOrFalseAndSetIt(os.Getenv("DEFAULT_SCAN_LIFETIME"), &defaultEntryFromEnv.IScanLifetime)
+		typecastStringToBoolOrFalseAndSetIt(os.Getenv("DEFAULT_SCAN_MALWARE"), &defaultEntryFromEnv.IScanMalware)
+		typecastStringToBoolOrFalseAndSetIt(os.Getenv("DEFAULT_SCAN_NEW_VERSION"), &defaultEntryFromEnv.IsScanNewVersion)
+		typecastStringToBoolOrFalseAndSetIt(os.Getenv("DEFAULT_SCAN_RUN_AS_ROOT"), &defaultEntryFromEnv.IsScanRunAsRoot)
+		typecastStringToBoolOrFalseAndSetIt(os.Getenv("DEFAULT_SCAN_RUN_AS_PRIVILEGED"), &defaultEntryFromEnv.IsScanRunAsPrivileged)
+		typecastStringToBoolOrFalseAndSetIt(os.Getenv("DEFAULT_SKIP"), &defaultEntryFromEnv.Skip)
 	}
 	return defaultEntryFromEnv
 }
@@ -282,6 +290,23 @@ func setCollectorEntryFromLabelsAndAnnotations(collectorEntry *model.CollectorEn
 
 	library.SetStringFromAnnotationAndLabel(annotateabbleAndLabelableObject, "app.kubernetes.io/name", &collectorEntry.AppKubernetesName)
 	library.SetStringFromAnnotationAndLabel(annotateabbleAndLabelableObject, "app.kubernetes.io/version", &collectorEntry.AppKubernetesVersion)
+
+	var engagementTags = ""
+	engagementTagsAnnotationName := getEngagementTagsAnnotationName()
+	library.SetStringFromAnnotationAndLabel(annotateabbleAndLabelableObject, engagementTagsAnnotationName, &engagementTags)
+	jTags, _ := json.Marshal(defaultEntryFromEnv.EngagementTags)
+	log.Info().Bytes("engagementTags ", jTags).Msg("JSON")
+	if engagementTags != "" && engagementTags != "null" {
+		engagementTagsAsList := strings.Split(engagementTags, ",")
+		collectorEntry.EngagementTags = append(collectorEntry.EngagementTags, engagementTagsAsList...)
+	}
+}
+func getEngagementTagsAnnotationName() string {
+	engagementTagsAnnotationName := os.Getenv("ANNOTATION_NAME_ENGAGEMENT_TAG")
+	if engagementTagsAnnotationName == "" {
+		engagementTagsAnnotationName = "defectdojo.sdase.org/engagement-tags"
+	}
+	return engagementTagsAnnotationName
 }
 
 func storeFiles(collectorEntries []model.CollectorEntry, imageCollectorDefaults model.ImageCollectorDefaults) {

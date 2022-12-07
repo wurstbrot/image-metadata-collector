@@ -17,4 +17,7 @@ COPY --from=build-env /bom.json /bom.json
 
 USER 1001
 
+ENV ANNOTATION_NAME_ENGAGEMENT_TAG="clusterscanner.sdase.org/engagement-tags"
+ENV DEFAULT_ENGAGEMENT_TAGS="cluster-image-scanner"
+
 CMD ["/app"]
