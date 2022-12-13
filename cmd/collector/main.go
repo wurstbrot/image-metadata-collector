@@ -28,6 +28,7 @@ var kubeconfig, kubecontext, masterURL, teamName, environmentName string
 var scanIntervalInSecondsVersionCollector int64
 var isVersionCollector, isImageCollector bool
 var s3ParameterEntry = model.S3parameterEntry{}
+var gitParameterEntry = model.GitParameterEntry{}
 var imageCollectorDefaults = model.ImageCollectorDefaults{}
 
 func newCommand() *cobra.Command {
@@ -80,6 +81,13 @@ func newCommand() *cobra.Command {
 	c.PersistentFlags().BoolVar(&s3ParameterEntry.S3insecure, "image-collector-s3-insecure", false, "Insecure bucket connection")
 	c.PersistentFlags().BoolVar(&s3ParameterEntry.S3ForcePathStyle, "image-collector-s3-force-path-style", false, "Enforce S3 Force Path Style (should be true for minio)")
 
+	c.PersistentFlags().StringVar(&gitParameterEntry.Password, "image-collector-git-password", "", "Git Password to connect")
+	c.PersistentFlags().StringVar(&gitParameterEntry.Url, "image-collector-git-url", "", "Git URL to connect, use ")
+	c.PersistentFlags().StringVar(&gitParameterEntry.PrivateKeyFile, "image-collector-git-private-key-file-path", "/home/nonroot/.ssh/id_rsa", "Path to the private ssh/github key file")
+	c.PersistentFlags().StringVar(&gitParameterEntry.Directory, "image-collector-git-directory", "/home/nonroot/git", "Directory to clone to")
+	c.PersistentFlags().Int64Var(&gitParameterEntry.GithubAppId, "image-collector-github-app-id", 0, "Github AppId")
+	c.PersistentFlags().Int64Var(&gitParameterEntry.GithubInstallationId, "image-collector-github-installation-id", 0, "Github InstallationId")
+
 	var isDebug = false
 	c.PersistentFlags().BoolVar(&isDebug, "debug", false, "Set logging level to debug, default logging level is info")
 	zerolog.SetGlobalLevel(zerolog.InfoLevel)
@@ -96,7 +104,7 @@ func run() {
 	imageCollectorDefaults.Client = client
 	go versioncollector.Run(isVersionCollector, teamName, environmentName, client, scanIntervalInSecondsVersionCollector)
 	imageCollectorDefaults.Environment = environmentName
-	go collector.Run(isImageCollector, imageCollectorDefaults, s3ParameterEntry)
+	go collector.Run(isImageCollector, imageCollectorDefaults, s3ParameterEntry, gitParameterEntry)
 
 	// Expose the registered metrics via HTTP.
 	http.Handle("/metrics", promhttp.HandlerFor(

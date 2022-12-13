@@ -18,4 +18,5 @@ curl -Ls -H "Host: localhost:9000" \
      http://localhost:9000${resource} -o $outputFile
 if [ $? -ne 0 ]; then
   echo "Could not download ${resource}"
+  exit 1
 fi

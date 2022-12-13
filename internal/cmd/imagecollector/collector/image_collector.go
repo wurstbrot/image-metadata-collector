@@ -49,10 +49,14 @@ var replacements []model.RegistyReplacment
 
 const configBasePath = "/configs"
 
-func clusterImageScannerCollectorRun(imageCollectorDefaults model.ImageCollectorDefaults, s3ParameterEntry model.S3parameterEntry) error {
+func clusterImageScannerCollectorRun(imageCollectorDefaults model.ImageCollectorDefaults, s3ParameterEntry model.S3parameterEntry, gitParameterEntry model.GitParameterEntry) error {
 	// TODO Verify that SI is not using IMAGE_SKIP_POSITIVE_LIST
 	// TODO Verify that SI is not using IMAGE_SKIP_NEGATIVE_LIST
 	storage.Init(s3ParameterEntry)
+	err := storage.InitGit(gitParameterEntry)
+	if err != nil {
+		return err
+	}
 	imageManager, err := library.InitImageNegativeList(configBasePath)
 	if err != nil {
 		return err
@@ -64,6 +68,7 @@ func clusterImageScannerCollectorRun(imageCollectorDefaults model.ImageCollector
 	namespaces, err := imageCollectorDefaults.Client.CoreV1().Namespaces().List(context.Background(), metav1.ListOptions{})
 	if err != nil {
 		log.Fatal().Stack().Err(err).Msg("failed to get namespaces")
+		return err
 	}
 
 	for _, namespace := range namespaces.Items {
@@ -309,8 +314,13 @@ func getEngagementTagsAnnotationName() string {
 	return engagementTagsAnnotationName
 }
 
+<<<<<<< HEAD
 func storeFiles(collectorEntries []model.CollectorEntry, imageCollectorDefaults model.ImageCollectorDefaults) {
 	saveFilesPath := "/tmp"
+=======
+func storeAndUploadFiles(collectorEntries []model.CollectorEntry, imageCollectorDefaults model.ImageCollectorDefaults) error {
+	filename := imageCollectorDefaults.Environment + "-output.json"
+>>>>>>> 180f1bf (Feat/git (#15))
 	sort.Slice(collectorEntries, func(i, j int) bool {
 		return collectorEntries[i].Image < collectorEntries[j].Image
 	})
@@ -320,18 +330,26 @@ func storeFiles(collectorEntries []model.CollectorEntry, imageCollectorDefaults 
 		return
 	}
 	if imageCollectorDefaults.IsSaveFiles {
-		library.SaveFile(saveFilesPath+"/output.json", []byte(dataCollectionEntries))
+		saveFilesPath := "/tmp"
+		filePath := saveFilesPath + "/" + filename
+		library.SaveFile(filePath, []byte(dataCollectionEntries))
 	}
-	storage.Store([]byte(dataCollectionEntries), saveFilesPath+"/output.json", imageCollectorDefaults.Environment)
+	if err = storage.Upload([]byte(dataCollectionEntries), filename, imageCollectorDefaults.Environment); err != nil {
+		return err
+	}
+	if err = storage.GitUpload([]byte(dataCollectionEntries), filename); err != nil {
+		return err
+	}
+	return nil
 }
 
-func Run(isImageCollector bool, imageCollectorDefaults model.ImageCollectorDefaults, s3ParameterEntry model.S3parameterEntry) {
+func Run(isImageCollector bool, imageCollectorDefaults model.ImageCollectorDefaults, s3ParameterEntry model.S3parameterEntry, gitParameterEntry model.GitParameterEntry) {
 	if isImageCollector {
 		log := log.With().
 			Str("component", "image-collector").Logger()
 		log.Info().Str("environmentName", imageCollectorDefaults.Environment).Int64("scanInterval", imageCollectorDefaults.ScanIntervalInSeconds).Msg("imageCollector is enabled")
 		for {
-			err := clusterImageScannerCollectorRun(imageCollectorDefaults, s3ParameterEntry)
+			err := clusterImageScannerCollectorRun(imageCollectorDefaults, s3ParameterEntry, gitParameterEntry)
 			if err != nil {
 				log.Fatal().Stack().Err(err).Msg("Stopping due to error in clusterImageScannerCollectorRun")
 				return

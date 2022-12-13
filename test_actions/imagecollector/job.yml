@@ -16,7 +16,7 @@ spec:
             runAsNonRoot: true
             allowPrivilegeEscalation: false
             runAsUser: 1001
-          image: "quay.io/sdase/sdase-version-collector:1.1.15-26-ge291814"	# TODO Version Automation
+          image: "quay.io/sdase/sdase-version-collector:1.1.32-28-gf1cd40f" # TODO Version Automation
           command: [ "/app" ]
           args: [
             "--cluster-name", "lord-of-the-rings",

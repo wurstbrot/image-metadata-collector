@@ -69,7 +69,7 @@ for pod in $(kubectl get pods -n cluster-image-scanner-image-collector | grep -v
   fi
   sleep 1
 done
-filesToCheck="output.json service-description.json" # missing-service-description.txt
+filesToCheck="lord-of-the-rings-output.json lord-of-the-rings-service-description.json" # missing-service-description.txt
 for fileToCheck in ${filesToCheck}; do
   ./s3download.bash "${fileToCheck}"
   compareDownloadedFileWithExpected "${fileToCheck}"

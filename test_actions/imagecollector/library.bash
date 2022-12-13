@@ -1,6 +1,8 @@
 #!/bin/bash
 #shellcheck disable=SC2155
 
+set -e
+
 wait_for_pods_ready () {
   local -r name="${1}"; shift
   local -r namespace="${1}"; shift
@@ -123,9 +125,9 @@ compareDownloadedFileWithExpected() {
   echo "Checking file ./expectedFiles/${filename} ${TMP_FOLDER}/${filename}"
   filenameCreateFile=${filename}
   if [ "$(echo "${filename}" | grep -c json)" -eq 1 ]; then
-    echo "Normalizing json (${TMP_FOLDER}/1xx)"
-    cat ${TMP_FOLDER}/${filename}  | jq '.[] | del(.image_id)' | sed 's/[a-z]:.*//' | sed 's/[0-9]:.*//' > ${TMP_FOLDER}/1xx
-    filenameCreateFile="1xx"
+    echo "Normalizing json (${TMP_FOLDER}/normalized-${filename})"
+    cat ${TMP_FOLDER}/${filename}  | jq '.[] | del(.image_id)' | sed 's/[a-z]:.*//' | sed 's/[0-9]:.*//' | sed 's/argocd-.*/argocd-/' > "${TMP_FOLDER}/normalized-${filename}"
+    filenameCreateFile="normalized-${filename}"
   fi
   diff ./expectedFiles/${filename} ${TMP_FOLDER}/${filenameCreateFile}
   if [ $? -ne 0 ]; then
@@ -133,8 +135,8 @@ compareDownloadedFileWithExpected() {
     echo "#########################./expectedFiles/${filename}:"
     cat ./expectedFiles/${filename}
 
-    echo "#########################${TMP_FOLDER}/${filename}:"
-    cat ${TMP_FOLDER}/${filename}
+    echo "#########################${TMP_FOLDER}/${filenameCreateFile}:"
+    cat ${TMP_FOLDER}/${filenameCreateFile}
     exit 1
   fi
   echo "->Files are the same"

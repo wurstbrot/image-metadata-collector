@@ -24,7 +24,7 @@ func SetStringFromAnnotationAndLabel(annotateableAndLabelableObject Annotateable
 }
 
 func SaveFile(path string, content []byte) {
-	err := os.WriteFile(path, content, 755)
+	err := os.WriteFile(path, content, 0755)
 	if err != nil {
 		log.Info().Stack().Err(err).Str("path", path).Msg("Error during opening file")
 	}

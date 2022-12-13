@@ -19,6 +19,10 @@ var s3ParameterEntry = model.S3parameterEntry{}
 
 func Init(providedS3ParameterEntry model.S3parameterEntry) {
 	s3ParameterEntry = providedS3ParameterEntry
+	if s3ParameterEntry.S3bucket == "" {
+		log.Info().Msg("S3bucket not given")
+		return
+	}
 	var validate = validator.New()
 	validate.RegisterStructValidation(model.ValidateCollectorEntry, model.CollectorEntry{})
 
@@ -34,21 +38,21 @@ func Init(providedS3ParameterEntry model.S3parameterEntry) {
 	}
 }
 
-func Store(content []byte, fileName string, environmentName string) {
-	sess, err := session.NewSession(&aws.Config{
-		Credentials:                   credentials.NewStaticCredentials(s3ParameterEntry.S3accessKey, s3ParameterEntry.S3secretKey, ""),
-		CredentialsChainVerboseErrors: aws.Bool(false),
-		Endpoint:                      aws.String(s3ParameterEntry.S3endpoint),
-		DisableSSL:                    aws.Bool(s3ParameterEntry.S3insecure),
-		S3ForcePathStyle:              aws.Bool(s3ParameterEntry.S3ForcePathStyle),
-		Region:                        aws.String(s3ParameterEntry.S3region),
-		//LogLevel:                      aws.LogLevel(aws.LogDebug | aws.LogDebugWithHTTPBody | aws.LogDebugWithRequestRetries | aws.LogDebugWithRequestErrors | aws.LogDebugWithSigning),
-		Logger: aws.NewDefaultLogger(),
-	})
-	//TODO is debugging für logLevel
-	if err != nil {
-		log.Error().Msg("Could not create session with s3 bucket")
-		return
+const serviceAccountTokenLocation = "/var/run/secrets/kubernetes.io/serviceaccount/token"
+
+func Upload(content []byte, fileName string, environmentName string) error {
+	if s3ParameterEntry.S3bucket == "" {
+		log.Info().Msg("S3bucket not given")
+		return nil
+	}
+	insecureStr := strconv.FormatBool(s3ParameterEntry.S3insecure)
+	log.Info().Str("s3ParameterEntry.S3insecure", insecureStr).Msg("in Upload")
+
+	awsConfig := aws.Config{
+		DisableSSL:       aws.Bool(s3ParameterEntry.S3insecure),
+		S3ForcePathStyle: aws.Bool(s3ParameterEntry.S3ForcePathStyle),
+		Region:           aws.String(s3ParameterEntry.S3region),
+		LogLevel:         getAwsLoglevel(),
 	}
 
 	var size int64 = int64(len(content))
@@ -67,5 +71,37 @@ func Store(content []byte, fileName string, environmentName string) {
 		log.Error().Msg(fmt.Sprintf("Failed to upload to S3 bucket %s, err: %v", s3ParameterEntry.S3bucket, uploadError))
 		return
 	}
-	log.Info().Str("res", res.String()).Msg("Created new file in s3")
+	log.Info().Str("res", res.String()).Str("fileName", fileName).Msg("Created new file in s3")
+	return nil
+}
+
+func getAwsConfigWithCredentials(awsConfig aws.Config, sess *session.Session) aws.Config {
+	var creds *credentials.Credentials
+	S3accessKey := s3ParameterEntry.S3accessKey
+	S3secretKey := s3ParameterEntry.S3secretKey
+	sessionToken := ""
+
+	if S3accessKey == "" {
+		stsSTS := sts.New(sess)
+		roleARN := os.Getenv("AWS_ROLE_ARN")
+		roleProvider := stscreds.NewWebIdentityRoleProviderWithOptions(stsSTS, roleARN, "image-collector", stscreds.FetchTokenPath(os.Getenv("AWS_WEB_IDENTITY_TOKEN_FILE")))
+
+		creds = credentials.NewCredentials(roleProvider)
+		credValue, _ := roleProvider.Retrieve()
+		S3accessKey = credValue.AccessKeyID
+		S3secretKey = credValue.SecretAccessKey
+		sessionToken = credValue.SessionToken
+		log.Info().Str("S3accessKey", S3accessKey).Msg("in getAwsConfigWithCredentials")
+	}
+	creds = credentials.NewStaticCredentials(S3accessKey, S3secretKey, sessionToken)
+	awsConfig = *awsConfig.WithCredentials(creds).WithEndpoint(*aws.String(s3ParameterEntry.S3endpoint))
+	return awsConfig
+}
+
+func getAwsLoglevel() *aws.LogLevelType {
+	logLevel := aws.LogLevel(aws.LogOff)
+	if zerolog.GlobalLevel() == zerolog.DebugLevel {
+		logLevel = aws.LogLevel(aws.LogDebug | aws.LogDebugWithHTTPBody | aws.LogDebugWithRequestRetries | aws.LogDebugWithRequestErrors | aws.LogDebugWithSigning)
+	}
+	return logLevel
 }
