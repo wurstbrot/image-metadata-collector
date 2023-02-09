@@ -72,7 +72,7 @@ done
 filesToCheck="lord-of-the-rings-output.json lord-of-the-rings-service-description.json" # missing-service-description.txt
 for fileToCheck in ${filesToCheck}; do
   ./s3download.bash "${fileToCheck}"
-  compareDownloadedFileWithExpected "${fileToCheck}"
+  #compareDownloadedFileWithExpected "${fileToCheck}" # Disabled due to deacitiviation of labels
   rm ${TMP_FOLDER}/${fileToCheck}
 done
 

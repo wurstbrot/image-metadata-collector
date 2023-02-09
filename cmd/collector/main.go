@@ -47,10 +47,20 @@ func newCommand() *cobra.Command {
 				DEFAULT_SCAN_NEW_VERSION
 				DEFAULT_SCAN_RUN_AS_ROOT
 				DEFAULT_SCAN_RUN_AS_PRIVILEGED
+				DEFAULT_TEAM_NAME
+				DEFAULT_CONTAINER_TYPE
 				AWS_WEB_IDENTITY_TOKEN_FILE
 				AWS_ROLE_ARN
 				DEFAULT_ENGAGEMENT_TAGS
-				ANNOTATION_NAME_ENGAGEMENT_TAG`,
+				ANNOTATION_NAME_ENGAGEMENT_TAG
+				ANNOTATION_NAME_PRODUCT
+				ANNOTATION_NAME_SLACK
+				ANNOTATION_NAME_TEAM
+				ANNOTATION_NAME_ROCKETCHAT
+				ANNOTATION_NAME_CONTAINER_TYPE
+				ANNOTATION_NAME_NAMESPACE_FILTER
+				ANNOTATION_NAME_NAMESPACE_FILTER_NEGATED
+`,
 		Run: func(cmd *cobra.Command, args []string) {
 			run()
 		},
@@ -73,6 +83,7 @@ func newCommand() *cobra.Command {
 	c.PersistentFlags().BoolVar(&imageCollectorDefaults.Skip, "image-collector-default-skip", false, "Images in namespaces are skipped without annotations/labels")
 	c.PersistentFlags().BoolVar(&imageCollectorDefaults.IsSaveFiles, "image-collector-save-files", false, "In addition to uploading the files to S3, store the files on the disk")
 
+	c.PersistentFlags().BoolVar(&s3ParameterEntry.Disabled, "image-collector-s3-disabled", false, "Disable S3")
 	c.PersistentFlags().StringVar(&s3ParameterEntry.S3bucket, "image-collector-s3-bucket", "cluster-image-scanner-collector", "S3 Bucket to store image collector results")
 	c.PersistentFlags().StringVar(&s3ParameterEntry.S3accessKey, "image-collector-s3-access-key", "", "S3 Access Key")
 	c.PersistentFlags().StringVar(&s3ParameterEntry.S3secretKey, "image-collector-s3-secret-key", "", "S3 Secret Key")
@@ -84,7 +95,7 @@ func newCommand() *cobra.Command {
 	c.PersistentFlags().StringVar(&gitParameterEntry.Password, "image-collector-git-password", "", "Git Password to connect")
 	c.PersistentFlags().StringVar(&gitParameterEntry.Url, "image-collector-git-url", "", "Git URL to connect, use ")
 	c.PersistentFlags().StringVar(&gitParameterEntry.PrivateKeyFile, "image-collector-git-private-key-file-path", "/home/nonroot/.ssh/id_rsa", "Path to the private ssh/github key file")
-	c.PersistentFlags().StringVar(&gitParameterEntry.Directory, "image-collector-git-directory", "/home/nonroot/git", "Directory to clone to")
+	c.PersistentFlags().StringVar(&gitParameterEntry.Directory, "image-collector-git-directory", "/tmp/git", "Directory to clone to")
 	c.PersistentFlags().Int64Var(&gitParameterEntry.GithubAppId, "image-collector-github-app-id", 0, "Github AppId")
 	c.PersistentFlags().Int64Var(&gitParameterEntry.GithubInstallationId, "image-collector-github-installation-id", 0, "Github InstallationId")
 

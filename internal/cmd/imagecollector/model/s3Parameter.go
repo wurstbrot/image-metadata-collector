@@ -1,11 +1,12 @@
 package model
 
 type S3parameterEntry struct {
-	S3bucket         string `validate:"required"`
+	Disabled         bool
+	S3bucket         string
 	S3secretKey      string
 	S3accessKey      string
-	S3endpoint       string `validate:"required"`
-	S3insecure       bool   `validate:"required"`
-	S3region         string `validate:"required"`
-	S3ForcePathStyle bool   `validate:"required"`
+	S3endpoint       string
+	S3insecure       bool
+	S3region         string
+	S3ForcePathStyle bool
 }

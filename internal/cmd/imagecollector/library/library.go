@@ -12,10 +12,10 @@ type AnnotateableAndLabelableInterface interface {
 }
 
 func SetStringFromAnnotationAndLabel(annotateableAndLabelableObject AnnotateableAndLabelableInterface, annotationName string, entryAttribute *string) { //nolint:all
-	var label = annotateableAndLabelableObject.GetLabels()[annotationName]
-	if label != "" {
-		*entryAttribute = label //nolint:all
-	}
+	//var label = annotateableAndLabelableObject.GetLabels()[annotationName]
+	//if label != "" {
+	//	*entryAttribute = label //nolint:all
+	//} TO BE ACTIVATED IN FEBRUARY 2023 again
 	var annotation = annotateableAndLabelableObject.GetAnnotations()[annotationName]
 
 	if annotation != "" {

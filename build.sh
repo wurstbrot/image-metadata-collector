@@ -84,8 +84,17 @@ buildah config \
   --label "io.sda-se.image.bill-of-materials-hash=${bill_of_materials_hash}" \
   --env ANNOTATION_NAME_ENGAGEMENT_TAG="clusterscanner.sdase.org/engagement-tags" \
   --env DEFAULT_ENGAGEMENT_TAGS="cluster-image-scanner" \
+  --env ANNOTATION_NAME_PRODUCT="contact.sdase.org/product" \
+  --env ANNOTATION_NAME_SLACK="contact.sdase.org/slack" \
+  --env ANNOTATION_NAME_EMAIL="contact.sdase.org/email" \
+  --env ANNOTATION_NAME_TEAM="contact.sdase.org/team" \
+  --env ANNOTATION_NAME_ROCKETCHAT="contact.sdase.org/rocketchat" \
+  --env ANNOTATION_NAME_CONTAINER_TYPE="contact.sdase.org/container_type" \
+  --env ANNOTATION_NAME_NAMESPACE_FILTER="clusterscanner.sdase.org/namespace_filter" \
+  --env ANNOTATION_NAME_NAMESPACE_FILTER_NEGATED="clusterscanner.sdase.org/negated_namespace_filter" \
+  --env DEFAULT_TEAM_NAME="nobody" \
   --user 1001 \
-  --cmd '["/app"]' \
+  --entrypoint '["/app"]' \
   --author "SDA SE Engineers" \
   --created-by "DevOps 5xx" \
   "${base_img}"

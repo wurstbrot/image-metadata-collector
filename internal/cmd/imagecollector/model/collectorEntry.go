@@ -25,11 +25,11 @@ type CollectorEntry struct {
 	IScanLifetime                    bool     `json:"is_scan_lifetime"`
 	IScanMalware                     bool     `json:"is_scan_malware"`
 	IsScanNewVersion                 bool     `json:"is_scan_new_version"`
-	IsScanRunAsRoot                  bool     `json:"is_scan_run_as_root"`
+	IsScanRunAsRoot                  bool     `json:"is_scan_runasroot"`
 	IsPotentiallyRunningAsRoot       bool     `json:"is_potentially_running_as_root"`
 	IsScanRunAsPrivileged            bool     `json:"is_scan_run_as_privileged"`
 	IsPotentiallyRunningAsPrivileged bool     `json:"is_potentially_running_as_privileged"`
-	ScanMaxDaysLifetime              int      `validate:"numeric" json:"is_scan_runasroot"`
+	ScanMaxDaysLifetime              int      `validate:"numeric" json:"scan_lifetime_max_days"`
 	Skip                             bool     `json:"skip"`
 	ScmSourceUrl                     bool     `json:"scm_source_url"`
 	EngagementTags                   []string `json:"engagement_tags"`

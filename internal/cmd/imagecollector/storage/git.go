@@ -37,6 +37,9 @@ func InitGit(gitParameterEntry model.GitParameterEntry) error {
 		log.Warn().Str("privateKeyFile", privateKeyFile).Err(err).Msg("read file failed")
 		return err
 	}
+	if _, err := os.Stat(directory); !os.IsNotExist(err) {
+		err = os.RemoveAll(directory)
+	}
 
 	// Clone the given repository to the given directory
 	log.Info().Str("url", url).Int64("gitParameterEntry.GithubInstallationId", gitParameterEntry.GithubInstallationId).Msg("cloning")

@@ -19,6 +19,10 @@ var s3ParameterEntry = model.S3parameterEntry{}
 
 func Init(providedS3ParameterEntry model.S3parameterEntry) {
 	s3ParameterEntry = providedS3ParameterEntry
+	if s3ParameterEntry.Disabled {
+		log.Info().Msg("S3 is disabled")
+		return
+	}
 	if s3ParameterEntry.S3bucket == "" {
 		log.Info().Msg("S3bucket not given")
 		return
@@ -41,6 +45,10 @@ func Init(providedS3ParameterEntry model.S3parameterEntry) {
 const serviceAccountTokenLocation = "/var/run/secrets/kubernetes.io/serviceaccount/token"
 
 func Upload(content []byte, fileName string, environmentName string) error {
+	if s3ParameterEntry.Disabled {
+		log.Info().Msg("S3 is disabled")
+		return nil
+	}
 	if s3ParameterEntry.S3bucket == "" {
 		log.Info().Msg("S3bucket not given")
 		return nil

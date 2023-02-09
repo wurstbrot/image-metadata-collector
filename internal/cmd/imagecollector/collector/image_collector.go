@@ -3,6 +3,7 @@ package collector
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"os"
 	"regexp"
 	"sort"
@@ -42,18 +43,23 @@ var collectorEntryDefault = model.CollectorEntry{
 	EngagementTags:                   []string{},
 }
 
-const namespaceFilterAnnotation = "clusterscanner.sdase.org/namespace_filter"
-const namespaceFilterNegatedAnnotation = "clusterscanner.sdase.org/negated_namespace_filter"
-
 var replacements []model.RegistyReplacment
 
 const configBasePath = "/configs"
+
+var labels model.Label
 
 func clusterImageScannerCollectorRun(imageCollectorDefaults model.ImageCollectorDefaults, s3ParameterEntry model.S3parameterEntry, gitParameterEntry model.GitParameterEntry) error {
 	// TODO Verify that SI is not using IMAGE_SKIP_POSITIVE_LIST
 	// TODO Verify that SI is not using IMAGE_SKIP_NEGATIVE_LIST
 	storage.Init(s3ParameterEntry)
-	err := storage.InitGit(gitParameterEntry)
+
+	err := setLabels()
+	if err != nil {
+		return err
+	}
+	err = storage.InitGit(gitParameterEntry)
+
 	if err != nil {
 		return err
 	}
@@ -97,6 +103,16 @@ func clusterImageScannerCollectorRun(imageCollectorDefaults model.ImageCollector
 			}
 		}
 		for _, entry := range collectorEntryContainers {
+			if entry.AppKubernetesName == "" {
+				entry.AppKubernetesName, err = extractNameFromImage(entry.Image)
+				if err != nil {
+					log.Warn().Stack().Err(err).Msg("failed to parse image name")
+				}
+				entry.AppKubernetesVersion, err = extractVersionFromTag(entry.Image)
+				if err != nil {
+					log.Warn().Stack().Err(err).Msg("failed to parse image version")
+				}
+			}
 			collectorEntries = append(collectorEntries, entry)
 		}
 	}
@@ -183,17 +199,17 @@ func checkAndSetNamespaceSkipByRegex(namespace v1.Namespace, collectorEntry *mod
 	}
 	var namespaceFilter = ""
 
-	library.SetStringFromAnnotationAndLabel(&namespace, namespaceFilterAnnotation, &namespaceFilter)
+	library.SetStringFromAnnotationAndLabel(&namespace, labels.NamespaceFilter, &namespaceFilter)
 	if namespaceFilter != "" && !collectorEntry.Skip {
 		isNamespaceSkipFilter, _ := regexp.MatchString(namespaceFilter, namespace.GetName())
 		if namespaceSkipRegex != "" && isNamespaceSkipFilter {
-			log.Debug().Str("namespaceFilterAnnotation", namespaceFilterAnnotation).Msg("Skipping image due to namespaceFilter")
+			log.Debug().Str("namespaceFilterAnnotation", labels.NamespaceFilter).Msg("Skipping image due to namespaceFilter")
 			collectorEntry.Skip = isNamespaceSkipFilter
 		}
 	}
 
 	var negatedNamespaceFilter = ""
-	library.SetStringFromAnnotationAndLabel(&namespace, namespaceFilterNegatedAnnotation, &negatedNamespaceFilter)
+	library.SetStringFromAnnotationAndLabel(&namespace, labels.NamespaceFilterNegated, &negatedNamespaceFilter)
 	if negatedNamespaceFilter != "" && !collectorEntry.Skip {
 		isNamespaceSkipFilter, _ := regexp.MatchString(negatedNamespaceFilter, namespace.GetName())
 		isNamespaceNegatedSkipFilter := !isNamespaceSkipFilter
@@ -212,7 +228,7 @@ func typecastStringToBoolOrFalseAndSetIt(value string, key *bool) { //nolint:all
 	if err != nil {
 		log.Warn().Stack().Err(err).Str("value", value).Msg("Couldn't typecast string to bool")
 	}
-	key = &val //nolint:all
+	*key = val
 }
 
 //Interface getLabels/getAnnotations
@@ -237,7 +253,7 @@ func typecastNumberToIntAndSetIt(number string, key *int) error { //nolint:all
 		log.Warn().Stack().Err(err).Str("number", number).Msg("Couldn't transform string")
 		return err
 	}
-	key = &val
+	*key = val
 	return nil
 }
 
@@ -259,7 +275,7 @@ func getCollectorEntryFromEnv(imageCollectorDefaults model.ImageCollectorDefault
 		if engagementTags != "" && engagementTags != "null" {
 			defaultEntryFromEnv.EngagementTags = strings.Split(engagementTags, ",")
 		}
-		jTags, _ := json.Marshal(defaultEntryFromEnv.EngagementTags)
+		jTags, _ := json.MarshalIndent(defaultEntryFromEnv.EngagementTags, "", "\t")
 		log.Info().Bytes("defaultEntryFromEnv.EngagementTags ", jTags).Msg("JSON")
 		typecastNumberToIntAndSetIt(os.Getenv("DEFAULT_SCAN_LIFETIME_MAX_DAYS"), &defaultEntryFromEnv.ScanMaxDaysLifetime)
 		typecastStringToBoolOrFalseAndSetIt(os.Getenv("DEFAULT_SCAN_BASEIMAGE_LIFETIME"), &defaultEntryFromEnv.IsScanBaseimageLifetime)
@@ -287,11 +303,11 @@ func setCollectorEntryFromLabelsAndAnnotations(collectorEntry *model.CollectorEn
 	setBooleanFromAnnotationAndLabel(annotateabbleAndLabelableObject, "clusterscanner.sdase.org/is-scan-runasroot", &collectorEntry.IsScanRunAsRoot)
 	setBooleanFromAnnotationAndLabel(annotateabbleAndLabelableObject, "clusterscanner.sdase.org/skip", &collectorEntry.Skip)
 
-	library.SetStringFromAnnotationAndLabel(annotateabbleAndLabelableObject, "contact.sdase.org/slack", &collectorEntry.Slack)
-	library.SetStringFromAnnotationAndLabel(annotateabbleAndLabelableObject, "contact.sdase.org/rocketchat", &collectorEntry.Rocketchat)
-	library.SetStringFromAnnotationAndLabel(annotateabbleAndLabelableObject, "contact.sdase.org/email", &collectorEntry.Email)
-	library.SetStringFromAnnotationAndLabel(annotateabbleAndLabelableObject, "contact.sdase.org/container_type", &collectorEntry.ContainerType)
-	library.SetStringFromAnnotationAndLabel(annotateabbleAndLabelableObject, "contact.sdase.org/team", &collectorEntry.Team)
+	library.SetStringFromAnnotationAndLabel(annotateabbleAndLabelableObject, labels.Slack, &collectorEntry.Slack)
+	library.SetStringFromAnnotationAndLabel(annotateabbleAndLabelableObject, labels.Rocketchat, &collectorEntry.Rocketchat)
+	library.SetStringFromAnnotationAndLabel(annotateabbleAndLabelableObject, labels.Email, &collectorEntry.Email)
+	library.SetStringFromAnnotationAndLabel(annotateabbleAndLabelableObject, labels.ContainerType, &collectorEntry.ContainerType)
+	library.SetStringFromAnnotationAndLabel(annotateabbleAndLabelableObject, labels.Team, &collectorEntry.Team)
 
 	library.SetStringFromAnnotationAndLabel(annotateabbleAndLabelableObject, "app.kubernetes.io/name", &collectorEntry.AppKubernetesName)
 	library.SetStringFromAnnotationAndLabel(annotateabbleAndLabelableObject, "app.kubernetes.io/version", &collectorEntry.AppKubernetesVersion)
@@ -299,7 +315,7 @@ func setCollectorEntryFromLabelsAndAnnotations(collectorEntry *model.CollectorEn
 	var engagementTags = ""
 	engagementTagsAnnotationName := getEngagementTagsAnnotationName()
 	library.SetStringFromAnnotationAndLabel(annotateabbleAndLabelableObject, engagementTagsAnnotationName, &engagementTags)
-	jTags, _ := json.Marshal(defaultEntryFromEnv.EngagementTags)
+	jTags, _ := json.MarshalIndent(defaultEntryFromEnv.EngagementTags, "", "\t")
 	log.Info().Bytes("engagementTags ", jTags).Msg("JSON")
 	if engagementTags != "" && engagementTags != "null" {
 		engagementTagsAsList := strings.Split(engagementTags, ",")
@@ -307,7 +323,7 @@ func setCollectorEntryFromLabelsAndAnnotations(collectorEntry *model.CollectorEn
 	}
 }
 func getEngagementTagsAnnotationName() string {
-	engagementTagsAnnotationName := os.Getenv("ANNOTATION_NAME_ENGAGEMENT_TAG")
+	engagementTagsAnnotationName := os.Getenv("")
 	if engagementTagsAnnotationName == "" {
 		engagementTagsAnnotationName = "defectdojo.sdase.org/engagement-tags"
 	}
@@ -324,7 +340,7 @@ func storeAndUploadFiles(collectorEntries []model.CollectorEntry, imageCollector
 	sort.Slice(collectorEntries, func(i, j int) bool {
 		return collectorEntries[i].Image < collectorEntries[j].Image
 	})
-	dataCollectionEntries, err := json.Marshal(collectorEntries)
+	dataCollectionEntries, err := json.MarshalIndent(collectorEntries, "", "\t")
 	if err != nil {
 		log.Fatal().Stack().Err(err).Msg("Could not marshal json collectorEntries")
 		return
@@ -337,6 +353,7 @@ func storeAndUploadFiles(collectorEntries []model.CollectorEntry, imageCollector
 	if err = storage.Upload([]byte(dataCollectionEntries), filename, imageCollectorDefaults.Environment); err != nil {
 		return err
 	}
+
 	if err = storage.GitUpload([]byte(dataCollectionEntries), filename); err != nil {
 		return err
 	}
@@ -367,4 +384,52 @@ func Run(isImageCollector bool, imageCollectorDefaults model.ImageCollectorDefau
 			time.Sleep(time.Duration(imageCollectorDefaults.ScanIntervalInSeconds) * time.Second)
 		}
 	}
+}
+
+func setLabels() error {
+	labels.Team = os.Getenv("ANNOTATION_NAME_TEAM")
+	labels.Product = os.Getenv("ANNOTATION_NAME_PRODUCT")
+	labels.Slack = os.Getenv("ANNOTATION_NAME_SLACK")
+	labels.Rocketchat = os.Getenv("ANNOTATION_NAME_ROCKETCHAT")
+	labels.Email = os.Getenv("ANNOTATION_NAME_EMAIL")
+	labels.ContainerType = os.Getenv("ANNOTATION_NAME_CONTAINER_TYPE")
+	labels.NamespaceFilter = os.Getenv("ANNOTATION_NAME_NAMESPACE")
+	labels.NamespaceFilterNegated = os.Getenv("ANNOTATION_NAME_NAMESPACE_FILTER_NEGATED")
+	labels.EngagementTags = os.Getenv("ANNOTATION_NAME_ENGAGEMENT_TAG")
+
+	validate = validator.New()
+	validate.RegisterStructValidation(model.ValidateCollectorEntry, model.CollectorEntry{})
+
+	err := validate.Struct(labels)
+	if err != nil {
+		if _, ok := err.(*validator.InvalidValidationError); ok {
+			log.Fatal().Stack().Err(err).Msg("Could not validate struct labels")
+			return err
+		}
+
+		for _, err := range err.(validator.ValidationErrors) {
+			log.Fatal().Stack().Err(err).Msg("Validation Errors for labels")
+		}
+	}
+	return nil
+}
+
+func extractNameFromImage(image string) (string, error) {
+	imageWithoutSha := strings.Split(image, "@")[0]
+	parts := strings.Split(imageWithoutSha, ":")
+	if len(parts) != 2 {
+		return "", fmt.Errorf("%s: image name doesn't include a tag", image)
+	}
+
+	return parts[0], nil
+}
+
+func extractVersionFromTag(image string) (string, error) {
+	imageWithoutSha := strings.Split(image, "@")[0]
+	parts := strings.Split(imageWithoutSha, ":")
+	if len(parts) != 2 {
+		return "", fmt.Errorf("%s: image name doesn't include a tag", image)
+	}
+
+	return parts[1], nil
 }
