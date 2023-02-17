@@ -152,6 +152,18 @@ func getContainerStatuses(collectorEntry model.CollectorEntry, pod v1.Pod, colle
 		if status.ImageID == "" {
 			collectorEntryContainer.ImageId = status.Image
 		}
+
+		/**
+		Fix the following from k8s (an image with the digest in "image" doesn't exists):
+		  containerStatuses:
+		  - containerID: containerd://f342094e25eb077f2daf3c44e2a1bc1bb731e6ec2805c5f4c6975e90baeca5dd
+		    image: sha256:d681a4ce3c50964d61f8ee81b9845092f1a8fbce05af07edb49cfa09fc6a64f5
+		    imageID: registry.k8s.io/ingress-nginx/controller@sha256:34ee929b111ffc7aa426ffd409af44da48e5a0eea1eb2207994d9e0c0882d143
+		*/
+		if strings.HasPrefix(collectorEntryContainer.Image, "sha256:") {
+			collectorEntryContainer.Image = collectorEntryContainer.ImageId
+		}
+
 		if strings.Contains(collectorEntryContainer.Image, "sha256:") {
 			if !strings.Contains(collectorEntryContainer.ImageId, "sha256:") {
 				collectorEntryContainer.ImageId = collectorEntryContainer.Image
