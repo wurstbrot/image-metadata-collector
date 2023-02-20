@@ -15,8 +15,8 @@ type CollectorEntry struct {
 	Slack                            string   `json:"slack" copier:"must"`
 	Rocketchat                       string   `json:"rocketchat"`
 	Email                            string   `validate:"omitempty,email" json:"email"`
-	AppKubernetesName                string   `validate:"ascii" json:"app_kubernetes_name"`
-	AppKubernetesVersion             string   `validate:"ascii" json:"app_kubernetes_version"`
+	AppKubernetesName                string   `validate:"ascii" json:"app_kubernetes_io_name"`
+	AppKubernetesVersion             string   `validate:"ascii" json:"app_kubernetes_io_version"`
 	ContainerType                    string   `validate:"oneof=application third-party,required" json:"container_type"`
 	IsScanBaseimageLifetime          bool     `json:"is_scan_baseimage_lifetime"`
 	IsScanDependencyCheck            bool     `json:"is_scan_dependency_check"`
