@@ -24,7 +24,7 @@ func main() {
 	cmd.CheckError(err)
 }
 
-var kubeconfig, kubecontext, masterURL, teamName, environmentName string
+var kubeconfig, kubecontext, masterURL, defaultTeamValue, defaultProductValue, product, environmentName string
 var scanIntervalInSecondsVersionCollector int64
 var isVersionCollector, isImageCollector bool
 var s3ParameterEntry = model.S3parameterEntry{}
@@ -68,7 +68,8 @@ func newCommand() *cobra.Command {
 	kubeclient.CreateClientOrDie(kubeconfig, kubecontext, masterURL)
 	c.PersistentFlags().StringVar(&environmentName, "cluster-name", "", "Name of the team used for extracting data.")
 
-	c.PersistentFlags().StringVar(&teamName, "team-name", "5xx", "Name of the team used for extracting data in the version collector.")
+	c.PersistentFlags().StringVar(&defaultTeamValue, "default-team-value", "unknown", "If no team/owner name can be extracted from a k8s resource, use this value.")
+	c.PersistentFlags().StringVar(&defaultProductValue, "default-product-value", "unknown", "If no product name can be extracted from a k8s resource, use this value.")
 	c.PersistentFlags().StringVar(&kubeconfig, "kubeconfig", "", "absolute path to the kubeconfig file")
 	c.PersistentFlags().StringVar(&kubecontext, "kubecontext", "", "The context to use to talk to the Kubernetes apiserver. If unset defaults to whatever your current-context is (kubectl config current-context)")
 	c.PersistentFlags().StringVar(&masterURL, "master", "", "URL of the API server")
@@ -113,7 +114,7 @@ func newCommand() *cobra.Command {
 func run() {
 	client := kubeclient.CreateClientOrDie(kubeconfig, kubecontext, masterURL)
 	imageCollectorDefaults.Client = client
-	go versioncollector.Run(isVersionCollector, teamName, environmentName, client, scanIntervalInSecondsVersionCollector)
+	go versioncollector.Run(isVersionCollector, defaultTeamValue, defaultProductValue, environmentName, client, scanIntervalInSecondsVersionCollector)
 	imageCollectorDefaults.Environment = environmentName
 	go collector.Run(isImageCollector, imageCollectorDefaults, s3ParameterEntry, gitParameterEntry)
 
