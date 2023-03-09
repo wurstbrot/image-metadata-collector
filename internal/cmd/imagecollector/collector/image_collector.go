@@ -316,6 +316,11 @@ func setCollectorEntryFromLabelsAndAnnotations(collectorEntry *model.CollectorEn
 	setBooleanFromAnnotationAndLabel(annotateabbleAndLabelableObject, "clusterscanner.sdase.org/skip", &collectorEntry.Skip)
 
 	library.SetStringFromAnnotationAndLabel(annotateabbleAndLabelableObject, labels.Slack, &collectorEntry.Slack)
+	if collectorEntry.Slack != "" && !strings.HasPrefix(collectorEntry.Slack, "#") {
+		log.Warn().Str("slack", collectorEntry.Slack).Msg("# has been forgotten for the slack channel")
+		collectorEntry.Slack = "#" + collectorEntry.Slack
+	}
+
 	library.SetStringFromAnnotationAndLabel(annotateabbleAndLabelableObject, labels.Rocketchat, &collectorEntry.Rocketchat)
 	library.SetStringFromAnnotationAndLabel(annotateabbleAndLabelableObject, labels.Email, &collectorEntry.Email)
 	library.SetStringFromAnnotationAndLabel(annotateabbleAndLabelableObject, labels.ContainerType, &collectorEntry.ContainerType)
