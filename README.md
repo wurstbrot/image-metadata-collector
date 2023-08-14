@@ -1,9 +1,4 @@
-# sdase-version-collector
-This app collects information about deployed apps and their versions. Part of the patch management suite.
-
-## RBAC
-
-This collector required a ClusterRole that allows listing of Deployments, StatefulSets, and DaemonSets.
+# sdase-image-collector
 
 # Contributing
 We are looking forward to contributions. Take a look at our [Contribution Guidelines](CONTRIBUTING.md) before submitting Pull Requests.

@@ -3,16 +3,20 @@ package storage
 import (
 	"bytes"
 	"fmt"
-	"net/http"
-	"path"
-
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/credentials"
+	"github.com/aws/aws-sdk-go/aws/credentials/stscreds"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
+	"github.com/aws/aws-sdk-go/service/sts"
 	"github.com/go-playground/validator/v10"
+	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
+	"net/http"
+	"os"
+	"path"
 	"sdase.org/collector/internal/cmd/imagecollector/model"
+	"strconv"
 )
 
 var s3ParameterEntry = model.S3parameterEntry{}
@@ -62,12 +66,14 @@ func Upload(content []byte, fileName string, environmentName string) error {
 		Region:           aws.String(s3ParameterEntry.S3region),
 		LogLevel:         getAwsLoglevel(),
 	}
-
+	sess, _ := session.NewSession(&awsConfig)
+	awsConfig = getAwsConfigWithCredentials(awsConfig, sess)
+	awsConfig = *awsConfig.WithEndpoint(*aws.String(s3ParameterEntry.S3endpoint))
+	log.Info().Str("s3ParameterEntry.S3accessKey", s3ParameterEntry.S3accessKey).Msg("in Upload")
 	var size int64 = int64(len(content))
 	fileType := http.DetectContentType(content)
 
-	log.Info().Str("path.Base(file.Name())", path.Base(fileName)).Msg("Storing")
-	var res, uploadError = s3.New(sess).PutObject(&s3.PutObjectInput{
+	var res, uploadError = s3.New(sess, &awsConfig).PutObject(&s3.PutObjectInput{
 		Bucket:             aws.String(s3ParameterEntry.S3bucket),
 		Key:                aws.String(environmentName + "/imagecollector/" + path.Base(fileName)),
 		Body:               bytes.NewReader(content),
@@ -77,7 +83,7 @@ func Upload(content []byte, fileName string, environmentName string) error {
 	})
 	if uploadError != nil {
 		log.Error().Msg(fmt.Sprintf("Failed to upload to S3 bucket %s, err: %v", s3ParameterEntry.S3bucket, uploadError))
-		return
+		return uploadError
 	}
 	log.Info().Str("res", res.String()).Str("fileName", fileName).Msg("Created new file in s3")
 	return nil

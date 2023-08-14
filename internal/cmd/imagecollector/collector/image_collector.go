@@ -116,7 +116,9 @@ func clusterImageScannerCollectorRun(imageCollectorDefaults model.ImageCollector
 			collectorEntries = append(collectorEntries, entry)
 		}
 	}
-	storeFiles(collectorEntries, imageCollectorDefaults)
+	if err = storeAndUploadFiles(collectorEntries, imageCollectorDefaults); err != nil {
+		return err
+	}
 	return nil
 }
 func getContainerSpecs(pod v1.Pod, collectorEntryContainers map[string]model.CollectorEntry) map[string]model.CollectorEntry {
@@ -243,7 +245,7 @@ func typecastStringToBoolOrFalseAndSetIt(value string, key *bool) { //nolint:all
 	*key = val
 }
 
-//Interface getLabels/getAnnotations
+// Interface getLabels/getAnnotations
 func setBooleanFromAnnotationAndLabel(annotateabbleAndLabelableObject library.AnnotateableAndLabelableInterface, annotationName string, key *bool) {
 	var label = annotateabbleAndLabelableObject.GetLabels()[annotationName]
 	if label != "" {
@@ -347,20 +349,15 @@ func getEngagementTagsAnnotationName() string {
 	return engagementTagsAnnotationName
 }
 
-<<<<<<< HEAD
-func storeFiles(collectorEntries []model.CollectorEntry, imageCollectorDefaults model.ImageCollectorDefaults) {
-	saveFilesPath := "/tmp"
-=======
 func storeAndUploadFiles(collectorEntries []model.CollectorEntry, imageCollectorDefaults model.ImageCollectorDefaults) error {
 	filename := imageCollectorDefaults.Environment + "-output.json"
->>>>>>> 180f1bf (Feat/git (#15))
 	sort.Slice(collectorEntries, func(i, j int) bool {
 		return collectorEntries[i].Image < collectorEntries[j].Image
 	})
 	dataCollectionEntries, err := json.MarshalIndent(collectorEntries, "", "\t")
 	if err != nil {
 		log.Fatal().Stack().Err(err).Msg("Could not marshal json collectorEntries")
-		return
+		return err
 	}
 	if imageCollectorDefaults.IsSaveFiles {
 		saveFilesPath := "/tmp"

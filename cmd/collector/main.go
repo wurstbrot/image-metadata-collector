@@ -12,7 +12,6 @@ import (
 	"sdase.org/collector/internal/cmd"
 	"sdase.org/collector/internal/cmd/imagecollector/collector"
 	"sdase.org/collector/internal/cmd/imagecollector/model"
-	"sdase.org/collector/internal/cmd/versioncollector"
 	"sdase.org/collector/internal/pkg/kubeclient"
 )
 
@@ -75,9 +74,6 @@ func newCommand() *cobra.Command {
 	c.PersistentFlags().StringVar(&masterURL, "master", "", "URL of the API server")
 	cmd.CheckError(c.MarkPersistentFlagRequired("cluster-name"))
 
-	c.PersistentFlags().BoolVar(&isVersionCollector, "is-versioncollector", true, "Enable the version collector")
-	c.PersistentFlags().Int64Var(&scanIntervalInSecondsVersionCollector, "scan-interval-versioncollector", 60, "Rescan intervalInSeconds in seconds for version collector")
-
 	c.PersistentFlags().BoolVar(&isImageCollector, "is-imagecollector", true, "Enable the image collector")
 	c.PersistentFlags().Int64Var(&imageCollectorDefaults.ScanIntervalInSeconds, "image-collector-scan-interval", 3600, "Rescan intervalInSeconds in seconds for image collector")
 	c.PersistentFlags().StringVar(&imageCollectorDefaults.ConfigBasePath, "image-collector-config-basepath", "/config", "Configuration folder for the image collector")
@@ -114,7 +110,6 @@ func newCommand() *cobra.Command {
 func run() {
 	client := kubeclient.CreateClientOrDie(kubeconfig, kubecontext, masterURL)
 	imageCollectorDefaults.Client = client
-	go versioncollector.Run(isVersionCollector, defaultTeamValue, defaultProductValue, environmentName, client, scanIntervalInSecondsVersionCollector)
 	imageCollectorDefaults.Environment = environmentName
 	go collector.Run(isImageCollector, imageCollectorDefaults, s3ParameterEntry, gitParameterEntry)
 

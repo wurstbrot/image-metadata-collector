@@ -1,6 +1,6 @@
 #!/bin/bash
 #shellcheck disable=SC2034
-# sdase-version-collertor container image
+# sdase-image-collertor container image
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
@@ -70,16 +70,16 @@ bill_of_materials_hash="$( ( cat "${0}";
 
 oci_prefix="org.opencontainers.image"
 
-descr="sdase-version-collector Image"
+descr="sdase-image-collector Image"
 
 buildah config \
   --label "${oci_prefix}.authors=SDA SE Engineers <engineers@sda-se.io>" \
-  --label "${oci_prefix}.url=https://quay.io/sdase/sdase-version-collector" \
-  --label "${oci_prefix}.source=https://github.com/SDA-SE/sdase-version-collector" \
+  --label "${oci_prefix}.url=https://quay.io/sdase/sdase-image-collector" \
+  --label "${oci_prefix}.source=https://github.com/SDA-SE/sdase-image-collector" \
   --label "${oci_prefix}.revision=${revision}" \
   --label "${oci_prefix}.vendor=SDA SE Open Industry Solutions" \
   --label "${oci_prefix}.licenses=MIT" \
-  --label "${oci_prefix}.title=sdase-version-collector" \
+  --label "${oci_prefix}.title=sdase-image-collector" \
   --label "${oci_prefix}.description=${descr}" \
   --label "io.sda-se.image.bill-of-materials-hash=${bill_of_materials_hash}" \
   --env ANNOTATION_NAME_ENGAGEMENT_TAG="clusterscanner.sdase.org/engagement-tags" \
@@ -99,7 +99,7 @@ buildah config \
   --created-by "DevOps 5xx" \
   "${base_img}"
 
-image="sdase-version-collector"
+image="sdase-image-collector"
 # create a individual image id
 image_build="${image}.${RANDOM}"
 buildah commit --quiet --rm "${base_img}" "${image_build}" && base_img=
