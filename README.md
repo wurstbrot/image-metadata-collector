@@ -1,5 +1,7 @@
 # sdase-image-collector
 
+The ClusterImageScanner Collector is a component of the [SDA SE ClusterImageScanner](https://github.com/SDA-SE/cluster-image-scanner).
+
 # Contributing
 We are looking forward to contributions. Take a look at our [Contribution Guidelines](CONTRIBUTING.md) before submitting Pull Requests.
 
