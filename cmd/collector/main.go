@@ -98,7 +98,7 @@ func newCommand() *cobra.Command {
 	c.PersistentFlags().BoolVar(&cfg.CollectorImage.Skip, "skip", false, "Default behaviour for skipping scans for images")
 	c.PersistentFlags().StringSliceVar(&cfg.CollectorImage.EngagementTags, "engagement-tags", []string{}, "Default engagement tags to use")
 	c.PersistentFlags().StringVar(&cfg.CollectorImage.ContainerType, "container-type", "application", "Default container-type to use")
-	c.PersistentFlags().StringVar(&cfg.CollectorImage.Team, "team", "", "Default team to use")
+	c.PersistentFlags().StringVar(&cfg.CollectorImage.Team, "team", "nobody", "Default team to use")
 	c.PersistentFlags().StringVar(&cfg.CollectorImage.Product, "product", "", "Default product to use")
 	c.PersistentFlags().StringVar(&cfg.CollectorImage.Slack, "slack", "", "Default slack channel to use")
 	c.PersistentFlags().StringVar(&cfg.CollectorImage.Email, "email", "", "Default email to use")
