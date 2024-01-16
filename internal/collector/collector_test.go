@@ -458,6 +458,7 @@ func TestConvert(t *testing.T) {
 			expectedCollectorImage: &[]CollectorImage{{
 				Namespace: "myNamespace",
 				Image:     "quay.io/name:tag",
+				ImageId:   "quay.io/name:tag",
 			}},
 		},
 		{
@@ -478,6 +479,7 @@ func TestConvert(t *testing.T) {
 			expectedCollectorImage: &[]CollectorImage{{
 				Namespace: "myNamespace",
 				Image:     "quay.io/name:tag",
+				ImageId:   "quay.io/name:tag",
 
 				Environment:    defaults.Environment,
 				ContainerType:  defaults.ContainerType,
@@ -506,6 +508,7 @@ func TestConvert(t *testing.T) {
 			expectedCollectorImage: &[]CollectorImage{{
 				Namespace: "myNamespace",
 				Image:     "quay.io/name:tag1",
+				ImageId:   "quay.io/name:tag1",
 
 				Environment:    defaults.Environment,
 				ContainerType:  defaults.ContainerType,
@@ -521,6 +524,7 @@ func TestConvert(t *testing.T) {
 			}, {
 				Namespace: "myNamespace",
 				Image:     "quay.io/name:tag2",
+				ImageId:   "quay.io/name:tag2",
 
 				Environment:    defaults.Environment,
 				ContainerType:  defaults.ContainerType,
@@ -547,6 +551,7 @@ func TestConvert(t *testing.T) {
 			expectedCollectorImage: &[]CollectorImage{{
 				Namespace: "myNamespace",
 				Image:     "quay.io/name:tag",
+				ImageId:   "quay.io/name:tag",
 
 				Environment:    defaults.Environment,
 				ContainerType:  defaults.ContainerType,
@@ -573,6 +578,7 @@ func TestConvert(t *testing.T) {
 			expectedCollectorImage: &[]CollectorImage{{
 				Namespace: "myNamespace",
 				Image:     "quay.io/name:tag",
+				ImageId:   "quay.io/name:tag",
 
 				Environment:    defaults.Environment,
 				ContainerType:  defaults.ContainerType,
@@ -600,6 +606,7 @@ func TestConvert(t *testing.T) {
 			expectedCollectorImage: &[]CollectorImage{{
 				Namespace: "myNamespace",
 				Image:     "quay.io/name:tag",
+				ImageId:   "quay.io/name:tag",
 
 				Environment:    defaults.Environment,
 				ContainerType:  defaults.ContainerType,
@@ -683,6 +690,7 @@ func TestConvert(t *testing.T) {
 			expectedCollectorImage: &[]CollectorImage{{
 				Namespace: "myNamespace",
 				Image:     "quay.io/name:tag",
+				ImageId:   "quay.io/name:tag",
 
 				Environment:    defaults.Environment,
 				ContainerType:  defaults.ContainerType,
@@ -703,12 +711,14 @@ func TestConvert(t *testing.T) {
 			annotationNames: &annotationNames,
 			targetK8Image: &[]kubeclient.Image{{
 				Image:         "quay.io/name:tag",
+				ImageId:       "quay.io/name:sha",
 				NamespaceName: "myNamespace",
 				Annotations:   map[string]string{"sda.se/description": "Lorem Ipsum Dolor Sit Amet"},
 			}},
 			expectedCollectorImage: &[]CollectorImage{{
 				Namespace: "myNamespace",
 				Image:     "quay.io/name:tag",
+				ImageId:   "quay.io/name:sha",
 
 				Environment:    defaults.Environment,
 				Description:    "Lorem Ipsum Dolor Sit Amet",
