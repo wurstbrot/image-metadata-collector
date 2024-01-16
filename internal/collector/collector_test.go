@@ -154,6 +154,16 @@ func TestIsSkipByImageFilter(t *testing.T) {
 			expectedResult: true,
 		},
 		{
+			name:        "SkipIsSetExpectSkipWithList",
+			imageFilter: []string{"amazonaws.com", "aws.com"},
+			targetImage: CollectorImage{
+				Image:     "333.dkr.ecr.eu-central-1.amazonaws.com/eks/kube-proxy@sha256:5891b5b522d5df086d0ff0b110fbd9d21bb4fc7163af34d08286a2e846f6be03",
+				Namespace: "name",
+				Skip:      false,
+			},
+			expectedResult: true,
+		},
+		{
 			name:        "NoMatchingNamespaceFilterSetExpectNoSkip",
 			imageFilter: []string{"^other$"},
 			targetImage: CollectorImage{
