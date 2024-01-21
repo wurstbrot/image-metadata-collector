@@ -95,6 +95,7 @@ func newCommand() *cobra.Command {
 	c.PersistentFlags().BoolVar(&cfg.CollectorImage.IsScanRunAsPrivileged, "is-scan-run-as-privilaged", true, "Default enable/disable RunAsPrivileged scan")
 	c.PersistentFlags().BoolVar(&cfg.CollectorImage.IsPotentiallyRunningAsRoot, "is-scan-potentially-running-as-root", true, "Default enable/disable PotentiallyRunningAsRoot scan")
 	c.PersistentFlags().BoolVar(&cfg.CollectorImage.IsPotentiallyRunningAsPrivileged, "is-scan-potentially-running-as-privileged", true, "Default enable/disable PotentiallyRunningAsPrivileged scan")
+	c.PersistentFlags().Int64Var(&cfg.CollectorImage.ScanLifetimeMaxDays, "ScanLifetimeMaxDays", 120, "Default max days for (base) image lifetime scan")
 	c.PersistentFlags().BoolVar(&cfg.CollectorImage.Skip, "skip", false, "Default behaviour for skipping scans for images")
 	c.PersistentFlags().StringSliceVar(&cfg.CollectorImage.EngagementTags, "engagement-tags", []string{}, "Default engagement tags to use")
 	c.PersistentFlags().StringVar(&cfg.CollectorImage.ContainerType, "container-type", "application", "Default container-type to use")
@@ -102,7 +103,6 @@ func newCommand() *cobra.Command {
 	c.PersistentFlags().StringVar(&cfg.CollectorImage.Product, "product", "", "Default product to use")
 	c.PersistentFlags().StringVar(&cfg.CollectorImage.Slack, "slack", "", "Default slack channel to use")
 	c.PersistentFlags().StringVar(&cfg.CollectorImage.Email, "email", "", "Default email to use")
-	c.PersistentFlags().StringVar(&cfg.CollectorImage.Rocketchat, "rocketchat", "", "Default rocketchat channel to use")
 	c.PersistentFlags().StringVar(&cfg.CollectorImage.NamespaceFilter, "namespace-filter", "", "Default namespace filter to use")
 	c.PersistentFlags().StringVar(&cfg.CollectorImage.NamespaceFilterNegated, "negated-namespace-filter", "", "Default negated namespace filter to use")
 

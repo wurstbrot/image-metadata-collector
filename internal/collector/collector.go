@@ -36,10 +36,9 @@ type CollectorImage struct {
 	NamespaceFilterNegated string   `json:"namespace_filter_negated"`
 	EngagementTags         []string `json:"engagement_tags"`
 
-	Team       string `json:"team"`
-	Slack      string `json:"slack"`
-	Rocketchat string `json:"rocketchat"`
-	Email      string `json:"email"`
+	Team  string `json:"team"`
+	Slack string `json:"slack"`
+	Email string `json:"email"`
 
 	IsScanBaseimageLifetime          bool  `json:"is_scan_baseimage_lifetime"`
 	IsScanDependencyCheck            bool  `json:"is_scan_dependency_check"`
@@ -52,7 +51,7 @@ type CollectorImage struct {
 	IsPotentiallyRunningAsRoot       bool  `json:"is_scan_potentially_running_as_root"`
 	IsScanRunAsPrivileged            bool  `json:"is_scan_run_as_privileged"`
 	IsPotentiallyRunningAsPrivileged bool  `json:"is_scan_potentially_running_as_privileged"`
-	ScanLifetimeMaxDays              int64 `json:"is_scan_lifetime_max_days"`
+	ScanLifetimeMaxDays              int64 `json:"scan_lifetime_max_days"`
 }
 
 type RunConfig struct {
@@ -85,10 +84,9 @@ func convertK8ImageToCollectorImage(k8Image kubeclient.Image, defaults *Collecto
 		NamespaceFilterNegated: GetOrDefaultString(tags, annotationNames.Scans+"negated-namespace-filter", defaults.NamespaceFilterNegated),
 		EngagementTags:         GetOrDefaultStringSlice(tags, annotationNames.DefectDojo+"engagement-tags", defaults.EngagementTags),
 
-		Team:       GetOrDefaultString(tags, annotationNames.Contact+"team", defaults.Team),
-		Slack:      GetOrDefaultString(tags, annotationNames.Contact+"slack", defaults.Slack),
-		Rocketchat: GetOrDefaultString(tags, annotationNames.Contact+"rocketchat", defaults.Rocketchat),
-		Email:      GetOrDefaultString(tags, annotationNames.Contact+"email", defaults.Email),
+		Team:  GetOrDefaultString(tags, annotationNames.Contact+"team", defaults.Team),
+		Slack: GetOrDefaultString(tags, annotationNames.Contact+"slack", defaults.Slack),
+		Email: GetOrDefaultString(tags, annotationNames.Contact+"email", defaults.Email),
 
 		IsScanBaseimageLifetime:          GetOrDefaultBool(tags, annotationNames.Scans+"is-scan-baseimage-lifetime", defaults.IsScanBaseimageLifetime),
 		IsScanDependencyCheck:            GetOrDefaultBool(tags, annotationNames.Scans+"is-scan-dependency-check", defaults.IsScanDependencyCheck),
@@ -151,7 +149,7 @@ func cleanCollectorImage(ci *CollectorImage, imageFilter *RunConfig) {
 func cleanCollectorImageId(ci *CollectorImage) string {
 	var imageId = strings.Replace(ci.ImageId, "docker-pullable://", "", -1)
 	if imageId == "" {
-		log.Info().Msgf("ImageId is empty for image %s. Using image name as imageId", ci.Image)
+		log.Info().Msgf("ImageId is empty for image %s (ns %s). Using image name as imageId", ci.Image, ci.Namespace)
 		imageId = ci.Image
 	}
 	return imageId
