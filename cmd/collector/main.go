@@ -53,7 +53,7 @@ func newCommand() *cobra.Command {
 
 	// Run Configuration
 	c.PersistentFlags().BoolVar(&cfg.Debug, "debug", false, "Set logging level to debug, default logging level is info")
-	c.Flags().StringSliceVarP(&cfg.RunConfig.ImageFilter, "image-filter", "s", []string{}, "Images to set the skip flag to true. Images as regex")
+	c.Flags().StringSliceVarP(&cfg.RunConfig.ImageFilter, "image-filter", "s", []string{}, "Images to set the skip flag to true. Images as regex comma seperated without spaces. e.g. 'mock-service,mongo,openpolicyagent/opa,/istio/")
 	// Kubernetes Config
 	c.PersistentFlags().StringVar(&cfg.KubeConfig.ConfigFile, "kube-config", "", "absolute path to the kubeconfig file")
 	c.PersistentFlags().StringVar(&cfg.KubeConfig.Context, "kube-context", "", "The context to use to talk to the Kubernetes apiserver. If unset defaults to whatever your current-context is (kubectl config current-context)")
