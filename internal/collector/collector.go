@@ -81,7 +81,7 @@ func convertK8ImageToCollectorImage(k8Image kubeclient.Image, defaults *Collecto
 		ContainerType:          GetOrDefaultString(tags, annotationNames.Base+"container-type", defaults.ContainerType),
 		Skip:                   GetOrDefaultBool(tags, annotationNames.Scans+"skip", defaults.Skip),
 		NamespaceFilter:        GetOrDefaultString(tags, annotationNames.Scans+"namespace-filter", defaults.NamespaceFilter),
-		NamespaceFilterNegated: GetOrDefaultString(tags, annotationNames.Scans+"negated-namespace-filter", defaults.NamespaceFilterNegated),
+		NamespaceFilterNegated: GetOrDefaultString(tags, annotationNames.Scans+"negated_namespace_filter", defaults.NamespaceFilterNegated),
 		EngagementTags:         GetOrDefaultStringSlice(tags, annotationNames.DefectDojo+"engagement-tags", defaults.EngagementTags),
 
 		Team:  GetOrDefaultString(tags, annotationNames.Contact+"team", defaults.Team),
@@ -98,7 +98,7 @@ func convertK8ImageToCollectorImage(k8Image kubeclient.Image, defaults *Collecto
 		IsScanRunAsRoot:                  GetOrDefaultBool(tags, annotationNames.Scans+"is-scan-runasroot", defaults.IsScanRunAsRoot),
 		IsPotentiallyRunningAsRoot:       GetOrDefaultBool(tags, annotationNames.Scans+"is-scan-potentially-running-as-root", defaults.IsPotentiallyRunningAsRoot),
 		IsScanRunAsPrivileged:            GetOrDefaultBool(tags, annotationNames.Scans+"is-scan-run-as-privileged", defaults.IsScanRunAsPrivileged),
-		IsPotentiallyRunningAsPrivileged: GetOrDefaultBool(tags, annotationNames.Scans+"is-scan-potentially-running-as-privilaged", defaults.IsPotentiallyRunningAsPrivileged),
+		IsPotentiallyRunningAsPrivileged: GetOrDefaultBool(tags, annotationNames.Scans+"is-scan-potentially-running-as-privileged", defaults.IsPotentiallyRunningAsPrivileged),
 		ScanLifetimeMaxDays:              GetOrDefaultInt64(tags, annotationNames.Scans+"scan-lifetime-max-days", defaults.ScanLifetimeMaxDays),
 	}
 
@@ -112,6 +112,7 @@ func isSkipImage(ci *CollectorImage, imageFilter *RunConfig) bool {
 
 func isSkipImageByImageFilter(ci *CollectorImage, runConfig *RunConfig) bool {
 	for _, imageFilter := range runConfig.ImageFilter {
+		log.Info().Msgf("image %s (imagefilter %s)", ci.Image, imageFilter)
 		matched, err := regexp.MatchString(imageFilter, ci.Image)
 		if matched && err == nil {
 			return true
