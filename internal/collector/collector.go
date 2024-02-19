@@ -112,7 +112,7 @@ func isSkipImage(ci *CollectorImage, imageFilter *RunConfig) bool {
 
 func isSkipImageByImageFilter(ci *CollectorImage, runConfig *RunConfig) bool {
 	for _, imageFilter := range runConfig.ImageFilter {
-		log.Info().Msgf("image %s (imagefilter %s)", ci.Image, imageFilter)
+		log.Debug().Msgf("image %s (imagefilter %s)", ci.Image, imageFilter)
 		matched, err := regexp.MatchString(imageFilter, ci.Image)
 		if matched && err == nil {
 			return true
