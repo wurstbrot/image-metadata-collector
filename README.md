@@ -12,6 +12,11 @@ The [SECURITY.md](SECURITY.md) includes information on responsible disclosure an
 go run cmd/collector/main.go  --storage fs --environment-name test
 ```
 
+## Test
+```
+go test ./...
+```
+
 ## Image Collector Integration Test
 To perform integration tests for the image collector, you need a kind cluster:
 ```bash
