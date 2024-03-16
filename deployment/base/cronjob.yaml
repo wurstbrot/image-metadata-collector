@@ -1,0 +1,55 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: image-metadata-collector
+spec:
+  schedule: "*/1 * * * *"
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          serviceAccountName: image-metadata-collector-sa
+          automountServiceAccountToken: true
+          containers:
+            - name: image-metadata-collector
+              securityContext:
+                runAsNonRoot: true
+              resources:
+                limits:
+                  cpu: 2000m
+                  memory: 124Mi
+              image: quay.io/sdase/image-metadata-collector:1.1.9
+              imagePullPolicy: Always
+              args:
+                - --storage
+                - api
+                - --api-endpoint
+                - $(API_URL)
+                - --api-key
+                - $(API_KEY)
+                - --api-signature
+                - $(API_SIGNATURE)
+                - --environment-name
+                - $(CLUSTER_NAME)
+                - --is-scan-new-version
+                - "false"
+              env:
+                - name: CLUSTER_NAME
+                  value: test
+                - name: API_URL
+                  valueFrom:
+                    configMapKeyRef:
+                      name: api-cm
+                      key: api-url
+                - name: API_SIGNATURE
+                  valueFrom:
+                    configMapKeyRef:
+                      name: api-cm
+                      key: api-signature
+                - name: API_KEY
+                  valueFrom:
+                    secretKeyRef:
+                      name: api-secret
+                      key: api-key
+          restartPolicy: OnFailure
